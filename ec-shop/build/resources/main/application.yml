@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ec-shop
+  datasource:
+    url: jdbc:h2:mem:ecshop;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+ecshop:
+  tax:
+    rate: 0.08
+  shipping:
+    base-fee: 15.00
+    free-shipping-threshold: 99.00
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.ecshop: INFO
+    org.springframework.security: WARN

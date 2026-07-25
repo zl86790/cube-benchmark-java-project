@@ -1,0 +1,175 @@
+package com.ecshop.service;
+
+import com.ecshop.dto.OrderDTO;
+import com.ecshop.dto.OrderItemDTO;
+import com.ecshop.model.Cart;
+import com.ecshop.model.CartItem;
+import com.ecshop.model.Order;
+import com.ecshop.model.OrderItem;
+import com.ecshop.model.OrderStatus;
+import com.ecshop.model.PaymentStatus;
+import com.ecshop.model.User;
+import com.ecshop.repository.OrderRepository;
+// COMPILE ERROR #1: Missing import for CartService
+// import com.ecshop.service.CartService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final CartService cartService;
+    private final ProductService productService;
+    private final InventoryService inventoryService;
+    private final PaymentService paymentService;
+    private final DiscountService discountService;
+    private final TaxService taxService;
+    private final ShippingService shippingService;
+    private final NotificationService notificationService;
+
+    @Transactional
+    public Order createOrder(Long userId, Long addressId) {
+        Cart cart = cartService.getCartByUserId(userId);
+        if (cart.getItems().isEmpty()) {
+            throw new IllegalStateException("购物车为空，无法创建订单");
+        }
+
+        // BUG #7 (HIGH): Payment and order not in same transaction boundary
+        // The payment is created AFTER the order is committed, so if payment
+        // fails, the order stays in NEW status with no payment record.
+
+        Order order = new Order();
+        order.setOrderNumber(UUID.randomUUID().toString().substring(0, 10));
+        order.setUser(new User()); // Simplified: should fetch real user
+        order.setStatus(OrderStatus.NEW);
+        order.setCreatedAt(LocalDateTime.now());
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : cart.getItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setProductName(cartItem.getProduct().getName());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setUnitPrice(cartItem.getUnitPrice());
+            orderItems.add(orderItem);
+        }
+        order.setItems(orderItems);
+
+        // BUG #4 (HIGH): Admin interface has no permission check
+        // All admin endpoints are publicly accessible - no @PreAuthorize
+
+        // BUG #5 (HIGH): calculateOrderTotals includes cancelled items
+        calculateOrderTotals(order);
+        boolean stockDeducted = inventoryService.deductStock(order.getItems());
+        if (!stockDeducted) {
+            throw new IllegalStateException("库存不足");
+        }
+
+        // BUG #7 (MEDIUM): Order committed, then payment created (non-transactional)
+        Order savedOrder = orderRepository.save(order);
+        paymentService.processPayment(savedOrder);
+
+        cartService.clearCart(userId);
+        notificationService.sendOrderConfirmation(savedOrder);
+
+        return savedOrder;
+    }
+
+    public Order getOrder(Long orderId) {
+        // BUG #10 (MEDIUM): NPE risk - orElse(null) without null check
+        // The caller receives null if order doesn't exist, causing NPE downstream
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
+    @Transactional
+    public Order cancelOrder(Long orderId) {
+        Order order = getOrder(orderId);
+        // BUG #10 (MEDIUM): If getOrder returns null (not found), NPE here
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new IllegalStateException("订单已取消");
+        }
+        if (order.getStatus() == OrderStatus.SHIPPED) {
+            throw new IllegalStateException("已发货订单无法取消");
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        return orderRepository.save(order);
+    }
+
+    @Transactional
+    public Order updateOrderStatus(Long orderId, OrderStatus status) {
+        Order order = getOrder(orderId);
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
+
+    /**
+     * BUG #5 (HIGH): Calculates order totals without filtering out cancelled items.
+     * If an order item has been cancelled but not removed from the list,
+     * its price is still included in the total, leading to overcharging.
+     */
+    private void calculateOrderTotals(Order order) {
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (OrderItem item : order.getItems()) {
+            // BUG: Doesn't check item.getStatus() for CANCELLED
+            // Should be: if (item.getStatus() != OrderItemStatus.CANCELLED)
+            subtotal = subtotal.add(
+                    item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+            );
+        }
+        order.setSubtotal(subtotal);
+
+        BigDecimal discount = discountService.calculateDiscount(order);
+        order.setDiscountAmount(discount);
+
+        BigDecimal afterDiscount = subtotal.subtract(discount);
+        BigDecimal tax = taxService.calculateTax(afterDiscount);
+        order.setTaxAmount(tax);
+
+        BigDecimal shipping = shippingService.calculateShippingFee(order);
+        order.setShippingAmount(shipping);
+
+        BigDecimal total = afterDiscount.add(tax).add(shipping);
+        order.setTotalAmount(total);
+    }
+
+    public OrderDTO toDTO(Order order) {
+        OrderDTO dto = new OrderDTO();
+        dto.setId(order.getId());
+        dto.setOrderNumber(order.getOrderNumber());
+        dto.setStatus(order.getStatus().name());
+        dto.setSubtotal(order.getSubtotal());
+        dto.setTaxAmount(order.getTaxAmount());
+        dto.setShippingAmount(order.getShippingAmount());
+        dto.setDiscountAmount(order.getDiscountAmount());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setCreatedAt(order.getCreatedAt());
+
+        dto.setItems(order.getItems().stream().map(item -> {
+            OrderItemDTO itemDTO = new OrderItemDTO();
+            itemDTO.setId(item.getId());
+            itemDTO.setProductId(item.getProduct().getId());
+            itemDTO.setProductName(item.getProductName());
+            itemDTO.setQuantity(item.getQuantity());
+            itemDTO.setUnitPrice(item.getUnitPrice());
+            return itemDTO;
+        }).toList());
+
+        return dto;
+    }
+}
