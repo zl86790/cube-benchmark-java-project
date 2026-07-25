@@ -2,7 +2,9 @@
 
 一个使用 Spring Boot 3.2.5 + Java 21 + Gradle 构建的电子商务网站，**专门用于测试 AI Agent（如 Codex、Claude、Cursor 等）的系统 Bug 发现和 Debug 能力**。
 
-项目中**预先植入了 20 个运行时 Bug + 5 个编译错误**，涵盖高/中/低三个严重级别（Bug）以及多种常见编译错误类型，涉及并发、安全、数据一致性、精度丢失、资源泄漏等典型企业级应用的常见缺陷。
+项目中**预先植入了 20 个运行时 Bug + 15 个编译错误**，涵盖高/中/低三个严重级别（Bug）以及多种常见编译错误类型，涉及并发、安全、数据一致性、精度丢失、资源泄漏等典型企业级应用的常见缺陷。
+
+> 说明：15 个编译错误中，CE-1 ~ CE-5 是有意植入的独立、单点错误；CE-6 ~ CE-15 是在核对源码时额外发现但此前未被记录的错误，全部集中在 `service/OrderService.java` 与 `controller/OrderController.java`、`repository/OrderRepository.java`、`service/DiscountService.java`、`service/PaymentService.java`、`model/Order.java`、`model/OrderItem.java` 之间的接口不一致（方法签名、参数个数、字段名、枚举值均对不上）。这些错误已通过实际执行 `gradle compileJava` 并在隔离副本中逐条修复至 `BUILD SUCCESSFUL` 验证无遗漏。
 
 ---
 
@@ -112,17 +114,17 @@ gradle bootRun
 
 应用启动后访问: `http://localhost:8080`
 
-> **注意**: 项目当前包含 5 个编译错误（详见下方），`gradle compileJava` 会失败。如需正常运行项目，需要先修复这些编译错误。
+> **注意**: 项目当前包含 15 个编译错误（详见下方），`gradle compileJava` 会失败。如需正常运行项目，需要先修复这些编译错误。修复 CE-1~CE-5 后 `gradle compileJava` **仍然不会通过**，因为 OrderService.java 相关的 CE-6~CE-15 尚未修复。
 
 ---
 
-## Bug 清单（共 20 个运行时 Bug + 5 个编译错误）
+## Bug 清单（共 20 个运行时 Bug + 15 个编译错误）
 
 ---
 
-## ⚙️ 编译错误 (Compilation Errors) — 5 个
+## ⚙️ 编译错误 (Compilation Errors) — 15 个
 
-以下 5 个编译错误是额外加入的，项目当前**无法通过 `gradle compileJava`**。这些错误用于测试 AI Agent 从编译器错误信息反向定位源码问题的能力，覆盖了 Java 开发中最常见的编译错误类型。
+以下 15 个编译错误共同导致项目当前**无法通过 `gradle compileJava`**。CE-1~CE-5 用于测试 AI Agent 从编译器错误信息反向定位源码问题的能力，覆盖了 Java 开发中最常见的编译错误类型；CE-6~CE-15 集中暴露 `OrderService.java` 与其调用方/被调用方之间的接口漂移（签名、参数个数、字段名、枚举值不一致），用于测试 Agent 能否在**多文件间追踪调用链**、一次性识别同一根源导致的连锁编译失败，而不是逐个 symbol 修复。
 
 ### 编译错误总览
 
@@ -133,15 +135,28 @@ gradle bootRun
 | CE-3 | ❌ 编译 | `service/NotificationService.java` | 方法不存在 | 四处调用 `getEmailAddress()`，User 的 Lombok getter 是 `getEmail()` |
 | CE-4 | ❌ 编译 | `service/CartService.java` | 缺少 import | 删除了 `import java.math.BigDecimal;`，`toDTO()` 中 6 处引用全部报错 |
 | CE-5 | ❌ 编译 | `controller/ProductController.java` | 参数数量错误 | `getProducts(page)` 只传 1 个参数，方法签名需要 2 个 `(page, size)` |
+| CE-6 | ❌ 编译 | `service/OrderService.java` | import 了不存在的类 | `import com.ecshop.model.OrderStatus;`，实际是嵌套类 `Order.OrderStatus`，不存在顶层 `OrderStatus` 类 |
+| CE-7 | ❌ 编译 | `service/OrderService.java` | import 了不存在的类 | `import com.ecshop.model.PaymentStatus;`，实际是嵌套类 `Payment.PaymentStatus`，且该 import 全文未被使用 |
+| CE-8 | ❌ 编译 | `service/OrderService.java` | 枚举常量不存在 | `order.setStatus(OrderStatus.NEW)`，但 `Order.OrderStatus` 枚举只有 `PENDING/CONFIRMED/SHIPPED/DELIVERED/CANCELLED/REFUNDED`，没有 `NEW` |
+| CE-9 | ❌ 编译 | `service/OrderService.java` + `model/OrderItem.java` | 方法不存在 | `orderItem.setProductName(...)`（第 63 行）与 `item.getProductName()`（第 167 行），但 `OrderItem` 实体根本没有 `productName` 字段 |
+| CE-10 | ❌ 编译 | `service/OrderService.java` + `service/PaymentService.java` | 参数数量错误 | `paymentService.processPayment(savedOrder)` 只传 1 个参数，但方法签名是 `processPayment(Order order, Payment.PaymentMethod method, String creditCardNumber)`，需要 3 个 |
+| CE-11 | ❌ 编译 | `service/OrderService.java` + `repository/OrderRepository.java` | 参数数量错误 | `orderRepository.findByUserId(userId)` 只传 1 个参数，但仓库方法签名是 `findByUserId(Long userId, Pageable pageable)`，需要 2 个 |
+| CE-12 | ❌ 编译 | `service/OrderService.java` + `service/DiscountService.java` | 方法不存在 | `discountService.calculateDiscount(order)`，但 `DiscountService` 没有这个公开方法（只有 `applyDiscount(String, BigDecimal)` 和私有的 `calculateDiscount(Discount, BigDecimal)`） |
+| CE-13 | ❌ 编译 | `service/OrderService.java` + `model/Order.java` / `dto/OrderDTO.java` | 方法不存在 | `order.setShippingAmount(...)`（第 145 行）与 `order.getShippingAmount()`（第 158 行），但 `Order` 实体和 `OrderDTO` 的字段都叫 `shippingFee`，没有 `shippingAmount` |
+| CE-14 | ❌ 编译 | `controller/OrderController.java` + `service/OrderService.java` | 参数数量错误 | `orderService.createOrder(userId, addressId, discountCode, notes)` 传 4 个参数，但 `OrderService.createOrder()` 只接受 2 个 `(userId, addressId)` |
+| CE-15 | ❌ 编译 | `controller/OrderController.java` + `service/OrderService.java` | 方法不存在 | `orderService.getUserOrders(userId, page, size)`，但 `OrderService` 中根本不存在名为 `getUserOrders` 的方法 |
 
 ### 编译错误覆盖类型
 
 | 类型 | 数量 | 对应错误 |
 |------|------|----------|
 | 缺少 import | 2 | CE-1, CE-4 |
+| import/引用了不存在的类 | 2 | CE-6, CE-7 |
 | 返回类型与返回值不匹配 | 1 | CE-2 |
-| 调用不存在的方法 | 1 | CE-3 |
-| 方法调用参数数量错误 | 1 | CE-5 |
+| 调用不存在的方法 | 4 | CE-3, CE-9, CE-12, CE-15 |
+| 枚举常量不存在 | 1 | CE-8 |
+| 字段名/方法名不匹配（实体与调用方漂移） | 1 | CE-13 |
+| 方法调用参数数量错误 | 4 | CE-5, CE-10, CE-11, CE-14 |
 
 ---
 
@@ -221,14 +236,14 @@ public Inventory getInventory(Long productId) { ... }
 全部四个方法中调用了 `order.getUser().getEmailAddress()`，但 `User` 类的 email 字段由 Lombok `@Data` 注解自动生成的是 `getEmail()`，`getEmailAddress()` 是拼写错误，该方法不存在：
 
 ```java
-public void sendOrderConfirmation(User user, Order order) {
+public void sendOrderConfirmation(Order order) {
     log.info("Sending order confirmation email to {} for order {}",
-            user.getEmailAddress(),  // ❌ cannot find symbol: method getEmailAddress()
+            order.getUser().getEmailAddress(),  // ❌ cannot find symbol: method getEmailAddress()
             order.getOrderNumber());
 }
 ```
 
-四个方法全部受影响：`sendOrderConfirmation`、`sendOrderShippedNotification`、`sendOrderCancelledNotification`、`sendPaymentFailedNotification`。
+四个方法全部受影响：`sendOrderConfirmation`、`sendOrderShippedNotification`、`sendOrderCancelledNotification`、`sendPaymentFailedNotification`（均为单参数 `(Order order)`，方法内部通过 `order.getUser()` 取得 `User`）。
 
 **修复**: 将所有 `getEmailAddress()` 替换为 `getEmail()`。
 
@@ -290,6 +305,228 @@ public ApiResponse<List<ProductDTO>> getProducts(
 **修复**: 传入第二个参数：
 ```java
 Page<Product> productPage = productService.getProducts(page, size);
+```
+
+---
+
+### CE-6 — OrderService.java：import 了不存在的顶层类 OrderStatus
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java` |
+| **行号** | 第 9 行 |
+| **类型** | import 了不存在的类 |
+
+**问题描述**:   
+```java
+import com.ecshop.model.OrderStatus;  // ❌ cannot find symbol: class OrderStatus
+```
+`OrderStatus` 并不是 `com.ecshop.model` 包下的顶层类，而是定义在 `Order` 实体内部的嵌套枚举 `Order.OrderStatus`（见 `model/Order.java` 第 40-42 行）。文件中后续 `OrderStatus.CANCELLED`、`OrderStatus.SHIPPED` 等引用都依赖这个错误的 import。
+
+**修复**: 
+```java
+import com.ecshop.model.Order.OrderStatus;
+```
+
+---
+
+### CE-7 — OrderService.java：import 了不存在的顶层类 PaymentStatus
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java` |
+| **行号** | 第 10 行 |
+| **类型** | import 了不存在的类 |
+
+**问题描述**:   
+```java
+import com.ecshop.model.PaymentStatus;  // ❌ cannot find symbol: class PaymentStatus
+```
+与 CE-6 同类问题：`PaymentStatus` 实际是 `Payment` 实体内部的嵌套枚举 `Payment.PaymentStatus`（见 `model/Payment.java` 第 57 行）。更进一步，这个 import 在 `OrderService.java` 全文中**从未被使用**——修复方式不是改成 `import com.ecshop.model.Payment.PaymentStatus;`，而应该直接**删除**这行无用 import。
+
+**修复**: 删除该行 import。
+
+---
+
+### CE-8 — OrderService.java：使用了不存在的枚举常量 OrderStatus.NEW
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java` |
+| **方法** | `createOrder()` |
+| **行号** | 第 55 行 |
+| **类型** | 枚举常量不存在 |
+
+**问题描述**:   
+```java
+order.setStatus(OrderStatus.NEW);  // ❌ cannot find symbol: variable NEW
+```
+`Order.OrderStatus` 枚举定义为：
+```java
+public enum OrderStatus {
+    PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, REFUNDED
+}
+```
+即使 CE-6 的 import 修复后，`NEW` 也不是该枚举的合法值。即修好 import 之后编译仍会在这一行报错。
+
+**修复**: 根据业务语义改为 `OrderStatus.PENDING`（新建订单的初始状态）。
+
+---
+
+### CE-9 — OrderService.java + OrderItem.java：OrderItem 没有 productName 字段
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java`（调用方）、`model/OrderItem.java`（缺失字段） |
+| **行号** | `OrderService.java` 第 63 行、第 167 行 |
+| **类型** | 方法不存在 |
+
+**问题描述**:   
+```java
+orderItem.setProductName(cartItem.getProduct().getName());  // ❌ cannot find symbol: method setProductName
+...
+itemDTO.setProductName(item.getProductName());              // ❌ cannot find symbol: method getProductName
+```
+`OrderItem` 实体（`model/OrderItem.java`）只有 `id`、`order`、`product`、`quantity`、`unitPrice`、`subtotal`、`status` 字段，没有 `productName`。`OrderItemDTO.setProductName()` 本身是存在的（DTO 里有这个字段），问题出在 `OrderItem` **实体**缺少对应字段。
+
+**修复**: 要么在 `OrderItem` 实体中新增 `productName` 字段并生成对应 getter/setter，要么改为在 DTO 转换时从 `item.getProduct().getName()` 取值（并删除第 63 行对不存在字段的赋值）。
+
+---
+
+### CE-10 — OrderService.java + PaymentService.java：processPayment() 参数数量不匹配
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java`（调用方）、`service/PaymentService.java`（方法定义） |
+| **行号** | `OrderService.java` 第 82 行 |
+| **类型** | 方法调用参数数量错误 |
+
+**问题描述**:   
+```java
+paymentService.processPayment(savedOrder);
+// ❌ method processPayment(Order,Payment.PaymentMethod,String) cannot be applied to given types
+```
+`PaymentService.processPayment()` 的实际签名是 `processPayment(Order order, Payment.PaymentMethod method, String creditCardNumber)`，需要 3 个参数，调用处只传了 1 个。
+
+**修复**: 补齐支付方式和卡号参数，例如：
+```java
+paymentService.processPayment(savedOrder, Payment.PaymentMethod.CREDIT_CARD, creditCardNumber);
+```
+（`creditCardNumber` 需要作为 `createOrder()` 的入参传入，当前方法签名里也没有这个参数，属于同一处需要一并设计的接口缺口。）
+
+---
+
+### CE-11 — OrderService.java + OrderRepository.java：findByUserId() 参数数量不匹配
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java`（调用方）、`repository/OrderRepository.java`（方法定义） |
+| **方法** | `getOrdersByUserId()` |
+| **行号** | `OrderService.java` 第 97 行 |
+| **类型** | 方法调用参数数量错误 |
+
+**问题描述**:   
+```java
+public List<Order> getOrdersByUserId(Long userId) {
+    return orderRepository.findByUserId(userId);
+    // ❌ method findByUserId(Long,Pageable) cannot be applied to given types
+}
+```
+`OrderRepository` 中定义的是 `Page<Order> findByUserId(Long userId, Pageable pageable)`，需要分页参数，而这里只传了 `userId`，且返回类型也对不上（方法声明返回 `List<Order>`，仓库方法返回 `Page<Order>`）。
+
+**修复**: 要么给 `getOrdersByUserId()` 增加分页参数并返回 `Page<Order>`，要么在 `OrderRepository` 中新增一个不分页的 `List<Order> findByUserId(Long userId)` 方法。
+
+---
+
+### CE-12 — OrderService.java + DiscountService.java：calculateDiscount(Order) 方法不存在
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java`（调用方）、`service/DiscountService.java`（方法定义） |
+| **方法** | `calculateOrderTotals()` |
+| **行号** | `OrderService.java` 第 137 行 |
+| **类型** | 方法不存在 |
+
+**问题描述**:   
+```java
+BigDecimal discount = discountService.calculateDiscount(order);
+// ❌ cannot find symbol: method calculateDiscount(Order)
+```
+`DiscountService` 里唯一的公开折扣入口是 `applyDiscount(String code, BigDecimal orderAmount)`；另有一个私有方法 `calculateDiscount(Discount discount, BigDecimal orderAmount)`，签名不同且不可见。调用方传入的是整个 `Order` 对象，两者都对不上。
+
+**修复**: 改为调用 `discountService.applyDiscount(order.getDiscountCode(), subtotal)`（前提是 `Order` 需要有折扣码字段，当前也没有），或者在 `DiscountService` 中新增一个接受 `Order` 的公开重载方法。
+
+---
+
+### CE-13 — OrderService.java + Order.java / OrderDTO.java：shippingAmount 字段名不匹配
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `service/OrderService.java`（调用方）、`model/Order.java` + `dto/OrderDTO.java`（字段定义） |
+| **行号** | `OrderService.java` 第 145 行、第 158 行 |
+| **类型** | 方法不存在（字段名漂移） |
+
+**问题描述**:   
+```java
+order.setShippingAmount(shipping);            // 第145行 ❌ cannot find symbol
+...
+dto.setShippingAmount(order.getShippingAmount());  // 第158行 ❌ 两处都找不到符号
+```
+`Order` 实体和 `OrderDTO` 中的字段都叫 `shippingFee`（对应 `getShippingFee()`/`setShippingFee()`），全项目没有任何地方定义过 `shippingAmount`。
+
+**修复**: 统一改用 `getShippingFee()` / `setShippingFee()`。
+
+---
+
+### CE-14 — OrderController.java + OrderService.java：createOrder() 参数数量不匹配
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `controller/OrderController.java`（调用方）、`service/OrderService.java`（方法定义） |
+| **行号** | `OrderController.java` 第 24 行 |
+| **类型** | 方法调用参数数量错误 |
+
+**问题描述**:   
+```java
+Order order = orderService.createOrder(userId, addressId, discountCode, notes);
+// ❌ method createOrder(Long,Long) cannot be applied to given types
+```
+控制器按 4 个参数 `(userId, addressId, discountCode, notes)` 调用，但 `OrderService.createOrder()` 只接受 2 个参数 `(Long userId, Long addressId)`，完全不处理折扣码和备注。
+
+**修复**: 给 `OrderService.createOrder()` 增加 `discountCode`、`notes` 两个参数，并在方法体内接入折扣逻辑（同时也是修复 CE-12 的关联点）。
+
+---
+
+### CE-15 — OrderController.java + OrderService.java：getUserOrders() 方法不存在
+
+| 属性 | 值 |
+|------|-----|
+| **严重度** | ❌ 编译错误 |
+| **文件** | `controller/OrderController.java`（调用方）、`service/OrderService.java`（缺失方法） |
+| **行号** | `OrderController.java` 第 39 行 |
+| **类型** | 方法不存在 |
+
+**问题描述**:   
+```java
+Page<Order> orders = orderService.getUserOrders(userId, page, size);
+// ❌ cannot find symbol: method getUserOrders(Long,int,int)
+```
+`OrderService` 中只有不分页的 `getOrdersByUserId(Long userId)`（本身也因 CE-11 无法编译），没有任何名为 `getUserOrders` 的分页方法。
+
+**修复**: 在 `OrderService` 中新增：
+```java
+public Page<Order> getUserOrders(Long userId, int page, int size) {
+    return orderRepository.findByUserId(userId, PageRequest.of(page, size));
+}
 ```
 
 ---
@@ -665,7 +902,7 @@ log.info("Processing payment for order {}, amount: {}, card: {}",
 测试 AI Agent 时应关注以下能力：
 
 ### 1. 发现能力
-- Agent 是否能够通过代码审查发现所有 20 个运行时 Bug 和 5 个编译错误？
+- Agent 是否能够通过代码审查发现所有 20 个运行时 Bug 和 15 个编译错误？
 - 是否能理解业务逻辑而非仅检查语法错误？
 - 是否能够在多文件之间追踪调用链发现问题？
 - 能否从编译器错误信息反向定位到源码中的具体问题？
