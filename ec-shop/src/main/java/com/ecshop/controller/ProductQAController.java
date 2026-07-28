@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/product-qa")
 @RequiredArgsConstructor
 public class ProductQAController {
-
     private final ProductQAService productQAService;
 
     @PostMapping("/questions")

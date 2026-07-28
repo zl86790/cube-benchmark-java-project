@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ProductAnswerRepository extends JpaRepository<ProductAnswer, Long> {
-
     List<ProductAnswer> findByQuestionId(Long questionId);
 }

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Discount {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +49,6 @@ public class Discount {
     private Boolean isActive = true;
 
     public enum DiscountType {
-        PERCENTAGE, FIXED_AMOUNT
+        PERCENT, FIXED_AMOUNT
     }
 }

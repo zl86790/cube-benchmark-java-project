@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAnswerDTO {
-
     private Long id;
     private Long userId;
     private String answer;

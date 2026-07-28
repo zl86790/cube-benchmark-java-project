@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/membership")
 @RequiredArgsConstructor
 public class MembershipController {
-
     private final MembershipService membershipService;
 
     @GetMapping("/tiers")

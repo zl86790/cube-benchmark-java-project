@@ -12,12 +12,11 @@ import java.util.List;
 @RequestMapping("/api/audit-logs")
 @RequiredArgsConstructor
 public class AuditLogController {
-
     private final AuditLogRepository auditLogRepository;
 
     @GetMapping
     public ApiResponse<List<AuditLog>> getAllLogs() {
-        return ApiResponse.success(auditLogRepository.findAllByOrderByCreatedAtDesc());
+        return ApiResponse.success(auditLogRepository.findAllOrderByCreatedAtDesc());
     }
 
     @GetMapping("/user/{performedBy}")

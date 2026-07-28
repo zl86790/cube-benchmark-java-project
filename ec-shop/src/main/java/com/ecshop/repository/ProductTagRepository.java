@@ -7,7 +7,6 @@ import java.util.List;
 
 @Repository
 public interface ProductTagRepository extends JpaRepository<ProductTag, Long> {
-
     List<ProductTag> findByProductId(Long productId);
 
     List<ProductTag> findByTagId(Long tagId);

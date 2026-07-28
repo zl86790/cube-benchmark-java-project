@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class WishlistService {
-
     private final WishlistRepository wishlistRepository;
     private final WishlistItemRepository wishlistItemRepository;
     private final ProductService productService;
@@ -40,7 +39,7 @@ public class WishlistService {
     @Transactional
     public Wishlist addItem(Long userId, Long productId) {
         Wishlist wishlist = getWishlistByUserId(userId);
-        if (wishlistItemRepository.existsByWishlistIdAndProductId(wishlist.getId(), productId)) {
+        if (wishlistItemRepository.existsByWishlistAndProduct(wishlist.getId(), productId)) {
             return wishlist;
         }
         Product product = productService.getProduct(productId);

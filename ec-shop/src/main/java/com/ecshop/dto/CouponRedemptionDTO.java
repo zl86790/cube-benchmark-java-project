@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouponRedemptionDTO {
-
     private Long id;
     private Long couponId;
     private String couponCode;

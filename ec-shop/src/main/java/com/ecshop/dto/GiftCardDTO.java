@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftCardDTO {
-
     private Long id;
     private String code;
     private BigDecimal initialBalance;

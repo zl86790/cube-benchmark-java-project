@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ReturnService {
-
     private final ReturnRequestRepository returnRequestRepository;
     private final RefundRecordRepository refundRecordRepository;
 

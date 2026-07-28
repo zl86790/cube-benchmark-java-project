@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PromotionService {
-
     private final PromotionRepository promotionRepository;
     private final ProductService productService;
 
@@ -37,7 +36,7 @@ public class PromotionService {
     }
 
     @Transactional
-    public Promotion addFlashSaleItem(Long promotionId, Long productId, BigDecimal salePrice, Integer stockLimit) {
+    public Promotion addFlashSaleItem(Long promotionId, String productId, BigDecimal salePrice, Integer stockLimit) {
         Promotion promotion = getPromotion(promotionId);
         Product product = productService.getProduct(productId);
 

@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface GiftCardTransactionRepository extends JpaRepository<GiftCardTransaction, Long> {
-
     List<GiftCardTransaction> findByGiftCardIdOrderByCreatedAtDesc(Long giftCardId);
 }

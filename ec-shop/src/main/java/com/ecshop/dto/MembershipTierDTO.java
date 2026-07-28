@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MembershipTierDTO {
-
     private Long id;
     private String name;
     private BigDecimal minSpend;

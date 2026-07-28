@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductQuestionDTO {
-
     private Long id;
     private Long productId;
     private Long userId;

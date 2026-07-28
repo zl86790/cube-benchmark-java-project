@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipmentDTO {
-
     private Long id;
     private Long orderId;
     private String carrierName;

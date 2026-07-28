@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserMembership {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +25,7 @@ public class UserMembership {
     private MembershipTier tier;
 
     @Column(name = "joined_at")
-    private LocalDateTime joinedAt;
+    private LocalDateTime enrolledAt;
 
     @PrePersist
     protected void onCreate() {

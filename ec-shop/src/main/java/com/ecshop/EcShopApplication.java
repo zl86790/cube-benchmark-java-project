@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 public class EcShopApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EcShopApplication.class, args);
     }

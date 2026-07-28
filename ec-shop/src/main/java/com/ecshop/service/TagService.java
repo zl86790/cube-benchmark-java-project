@@ -17,18 +17,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class TagService {
-
     private final TagRepository tagRepository;
     private final ProductTagRepository productTagRepository;
     private final ProductService productService;
 
     public Tag getOrCreateTag(String name) {
-        return tagRepository.findByName(name)
-                .orElseGet(() -> {
-                    Tag tag = new Tag();
-                    tag.setName(name);
-                    return tagRepository.save(tag);
-                });
+        return tagRepository.findByName(name);
     }
 
     @Transactional

@@ -12,12 +12,11 @@ import java.util.List;
 @RequestMapping("/api/brands")
 @RequiredArgsConstructor
 public class BrandController {
-
     private final BrandService brandService;
 
     @GetMapping
     public ApiResponse<List<Brand>> getActiveBrands() {
-        return ApiResponse.success(brandService.getActiveBrands());
+        return ApiResponse.success(brandService.getAllActiveBrands());
     }
 
     @GetMapping("/{id}")

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/shipments")
 @RequiredArgsConstructor
 public class ShipmentController {
-
     private final ShipmentService shipmentService;
 
     @PostMapping

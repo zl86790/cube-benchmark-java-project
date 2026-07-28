@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-
     private final CategoryService categoryService;
 
     @GetMapping
@@ -27,7 +26,7 @@ public class CategoryController {
 
     @GetMapping("/{id}/subcategories")
     public ApiResponse<List<Category>> getSubCategories(@PathVariable Long id) {
-        return ApiResponse.success(categoryService.getSubCategories(id));
+        return ApiResponse.success(categoryService.getSubcategories(id));
     }
 
     @PostMapping

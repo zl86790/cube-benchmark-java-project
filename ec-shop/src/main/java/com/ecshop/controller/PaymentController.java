@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
 public class PaymentController {
-
     private final PaymentService paymentService;
 
     @GetMapping("/{id}")
@@ -27,7 +26,7 @@ public class PaymentController {
     }
 
     @PostMapping("/{id}/refund")
-    public ApiResponse<PaymentDTO> refundPayment(@PathVariable Long id) {
+    public ApiResponse<PaymentDTO> refundPayment(@PathVariable String id) {
         Payment payment = paymentService.refundPayment(id);
         return ApiResponse.success(paymentService.toDTO(payment));
     }

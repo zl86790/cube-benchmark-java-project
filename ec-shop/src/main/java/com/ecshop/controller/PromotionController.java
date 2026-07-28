@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/promotions")
 @RequiredArgsConstructor
 public class PromotionController {
-
     private final PromotionService promotionService;
 
     @GetMapping

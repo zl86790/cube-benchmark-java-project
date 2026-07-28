@@ -9,7 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchResultDTO {
-
     private List<ProductDTO> products;
     private long totalResults;
     private int page;

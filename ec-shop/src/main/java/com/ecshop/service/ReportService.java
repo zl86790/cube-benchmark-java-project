@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ReportService {
-
     private final OrderRepository orderRepository;
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
@@ -51,8 +50,8 @@ public class ReportService {
         List<Inventory> inventories = inventoryRepository.findAll();
 
         long lowStock = inventories.stream()
-                .filter(i -> i.getReorderThreshold() != null
-                        && i.getAvailableQuantity() <= i.getReorderThreshold())
+                .filter(i -> i.getMinimumStock() != null
+                        && i.getAvailableQuantity() <= i.getMinimumStock())
                 .count();
         long outOfStock = inventories.stream()
                 .filter(i -> i.getAvailableQuantity() != null && i.getAvailableQuantity() == 0)

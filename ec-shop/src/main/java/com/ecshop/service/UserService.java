@@ -17,13 +17,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-
     private final UserRepository userRepository;
 
     @Transactional
-    public User register(User user) {
-        // BUG #12 (MEDIUM): Email validation regex is too permissive
-        // ValidationUtils.isValidEmail allows invalid emails like "user@domain" without TLD
+    public User register(User user, boolean sendWelcomeEmail) {
         if (!ValidationUtils.isValidEmail(user.getEmail())) {
             throw new BusinessException("Invalid email format");
         }
@@ -36,7 +33,6 @@ public class UserService {
             throw new BusinessException("Email already registered");
         }
 
-        // In production, password should be hashed
         return userRepository.save(user);
     }
 
@@ -46,8 +42,7 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException("User not found: " + username));
+        return userRepository.findByUsername(username);
     }
 
     @Transactional

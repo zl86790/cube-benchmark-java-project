@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @RequestMapping("/api/coupons")
 @RequiredArgsConstructor
 public class CouponController {
-
     private final CouponService couponService;
 
     @PostMapping
@@ -24,9 +23,10 @@ public class CouponController {
     }
 
     @GetMapping("/{code}")
-    public ApiResponse<CouponDTO> getCoupon(@PathVariable String code) {
+    public ApiResponse<Coupon> getCoupon(@PathVariable String code) {
         Coupon coupon = couponService.getCoupon(code);
-        return ApiResponse.success(couponService.toDTO(coupon));
+        Coupon dto = couponService.toDTO(coupon);
+        return ApiResponse.success(dto);
     }
 
     @PostMapping("/{code}/redeem")

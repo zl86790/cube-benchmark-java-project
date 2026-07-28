@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface RefundRecordRepository extends JpaRepository<RefundRecord, Long> {
-
     Optional<RefundRecord> findByReturnRequestId(Long returnRequestId);
 }

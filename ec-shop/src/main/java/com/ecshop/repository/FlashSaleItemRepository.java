@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface FlashSaleItemRepository extends JpaRepository<FlashSaleItem, Long> {
-
     List<FlashSaleItem> findByPromotionId(Long promotionId);
 }

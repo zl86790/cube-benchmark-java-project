@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryService {
-
     private final CategoryRepository categoryRepository;
 
     public List<Category> getAllCategories() {

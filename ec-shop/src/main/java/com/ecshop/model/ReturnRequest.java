@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReturnRequest {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +42,6 @@ public class ReturnRequest {
     }
 
     public enum ReturnStatus {
-        REQUESTED, APPROVED, REJECTED, RECEIVED, REFUNDED
+        PENDING_REVIEW, APPROVED, REJECTED, RECEIVED, REFUNDED
     }
 }

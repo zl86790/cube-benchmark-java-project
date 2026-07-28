@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PointsTransactionDTO {
-
     private Long id;
     private String type;
     private Long points;

@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
-
     private final NotificationRepository notificationRepository;
 
     @GetMapping("/user/{userId}")
@@ -23,7 +22,7 @@ public class NotificationController {
 
     @GetMapping("/user/{userId}/unread")
     public ApiResponse<List<Notification>> getUnread(@PathVariable Long userId) {
-        return ApiResponse.success(notificationRepository.findByUserIdAndIsReadFalse(userId));
+        return ApiResponse.success(notificationRepository.findByUserIdAndReadFalse(userId));
     }
 
     @PostMapping("/{id}/read")

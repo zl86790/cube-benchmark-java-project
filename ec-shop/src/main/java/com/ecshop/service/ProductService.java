@@ -22,16 +22,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
-
     private final ProductRepository productRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public Page<Product> getProducts(int page, int size) {
-        // BUG #8 (MEDIUM): Pagination off-by-one - should be page-1 but using page directly
-        // For page=1, we want first page (index 0), but PageRequest.of(page, size)
-        // treats page directly as zero-based index, so page=1 gives SECOND page
         return productRepository.findAll(PageRequest.of(page, size));
     }
 
@@ -45,7 +41,6 @@ public class ProductService {
         return productRepository.searchByKeyword(keyword);
     }
 
-    // BUG #2 (HIGH): SQL Injection via raw SQL concatenation
     @SuppressWarnings("unchecked")
     public List<Product> advancedSearch(String name, String category, String minPrice, String maxPrice) {
         StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
@@ -69,8 +64,6 @@ public class ProductService {
 
     @Transactional
     public Product createProduct(Product product) {
-        // BUG #20 (LOW): No duplicate SKU check before saving
-        // Allows duplicate SKU to be inserted, causing constraint violation
         return productRepository.save(product);
     }
 
@@ -84,8 +77,6 @@ public class ProductService {
         existing.setCategory(updated.getCategory());
         existing.setImageUrl(updated.getImageUrl());
         existing.setIsActive(updated.getIsActive());
-        // BUG #9 (MEDIUM): Cache not invalidated after update
-        // @CachePut should be used or @CacheEvict manually
         return productRepository.save(existing);
     }
 

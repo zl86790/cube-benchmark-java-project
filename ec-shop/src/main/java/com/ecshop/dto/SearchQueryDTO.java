@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchQueryDTO {
-
     private String keyword;
     private Long categoryId;
     private BigDecimal minPrice;

@@ -22,13 +22,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ShipmentService {
-
     private final ShipmentRepository shipmentRepository;
     private final ShippingCarrierRepository shippingCarrierRepository;
 
     @Transactional
-    public Shipment createShipment(Long orderId, Long carrierId) {
-        ShippingCarrier carrier = shippingCarrierRepository.findById(carrierId)
+    public Shipment createShipment(String orderId, Long carrierId) {
+        ShippingCarrier carrier = shippingCarrierRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException("Shipping carrier not found: " + carrierId));
 
         Shipment shipment = new Shipment();

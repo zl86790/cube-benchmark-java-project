@@ -18,11 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MembershipService {
-
     private final MembershipTierRepository membershipTierRepository;
     private final UserMembershipRepository userMembershipRepository;
 
-    public List<MembershipTier> getTiers() {
+    public Page<MembershipTier> getTiers() {
         return membershipTierRepository.findAllByOrderByMinSpendAsc();
     }
 

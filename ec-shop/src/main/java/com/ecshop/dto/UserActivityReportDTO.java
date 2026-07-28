@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserActivityReportDTO {
-
     private long totalUsers;
     private long activeUsers;
     private long adminUsers;

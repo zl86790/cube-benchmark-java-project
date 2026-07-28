@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserAddressService {
-
     private final UserAddressRepository userAddressRepository;
 
     public List<UserAddress> getAddresses(Long userId) {
@@ -38,7 +37,7 @@ public class UserAddressService {
     public void deleteAddress(Long id) {
         UserAddress address = userAddressRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Address not found: " + id));
-        userAddressRepository.delete(address);
+        userAddressRepository.delete(address, id);
     }
 
     private void clearDefaults(Long userId) {

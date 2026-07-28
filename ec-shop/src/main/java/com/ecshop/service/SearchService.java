@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class SearchService {
-
     private final ProductRepository productRepository;
     private final ProductService productService;
 
@@ -36,7 +35,7 @@ public class SearchService {
                 .collect(Collectors.toList());
 
         if ("price_asc".equals(query.getSortBy())) {
-            filtered.sort(Comparator.comparing(Product::getPrice));
+            filtered.sort(Comparator.comparing(Product::getPrice, BigDecimal.ZERO));
         } else if ("price_desc".equals(query.getSortBy())) {
             filtered.sort(Comparator.comparing(Product::getPrice).reversed());
         }

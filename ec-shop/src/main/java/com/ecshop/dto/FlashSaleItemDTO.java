@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlashSaleItemDTO {
-
     private Long id;
     private Long productId;
     private String productName;

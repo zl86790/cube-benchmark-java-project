@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/loyalty")
 @RequiredArgsConstructor
 public class LoyaltyController {
-
     private final LoyaltyService loyaltyService;
 
     @GetMapping("/{userId}")

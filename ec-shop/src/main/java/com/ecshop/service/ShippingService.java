@@ -9,17 +9,13 @@ import java.math.BigDecimal;
 @Service
 @Slf4j
 public class ShippingService {
-
-    // BUG #19 (LOW): Hardcoded shipping fee instead of reading from configuration
-    // This should be configurable via application.yml or database
     private static final double BASE_SHIPPING_FEE = 15.00;
 
-    // BUG #19 continued: Free shipping threshold also hardcoded
     private static final double FREE_SHIPPING_THRESHOLD = 99.00;
 
     public BigDecimal calculateShippingFee(Order order) {
         if (order.getSubtotal() == null) {
-            return BigDecimal.valueOf(BASE_SHIPPING_FEE);
+            return BigDecimal.valueOf(EXPRESS_SHIPPING_FEE);
         }
 
         // Free shipping over threshold

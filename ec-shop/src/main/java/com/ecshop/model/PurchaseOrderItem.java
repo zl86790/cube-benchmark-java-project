@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +25,7 @@ public class PurchaseOrderItem {
     private Product product;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private String quantity;
 
     @Column(name = "unit_cost", nullable = false)
     private BigDecimal unitCost;

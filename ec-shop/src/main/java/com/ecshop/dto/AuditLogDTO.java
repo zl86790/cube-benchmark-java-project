@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuditLogDTO {
-
     private Long id;
     private String action;
     private String performedBy;

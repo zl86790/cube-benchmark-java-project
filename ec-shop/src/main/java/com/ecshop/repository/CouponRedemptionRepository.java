@@ -7,7 +7,6 @@ import java.util.List;
 
 @Repository
 public interface CouponRedemptionRepository extends JpaRepository<CouponRedemption, Long> {
-
     List<CouponRedemption> findByUserId(Long userId);
 
     List<CouponRedemption> findByCouponId(Long couponId);

@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class CouponService {
-
     private final CouponRepository couponRepository;
     private final CouponRedemptionRepository couponRedemptionRepository;
 
@@ -36,8 +35,7 @@ public class CouponService {
     }
 
     public Coupon getCoupon(String code) {
-        return couponRepository.findByCode(code)
-                .orElseThrow(() -> new CouponNotFoundException(code));
+        return couponRepository.findByCode(code);
     }
 
     public void validateCoupon(Coupon coupon, BigDecimal orderAmount) {

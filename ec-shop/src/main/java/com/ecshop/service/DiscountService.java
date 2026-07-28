@@ -13,19 +13,12 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 @Service
-// BUG #13 (MEDIUM): DiscountService is prototype-scoped but used as singleton
-// by OrderService (which is a singleton). This means the discountAppliedCount
-// field is actually shared across all requests, making the usage tracking inaccurate.
-// Also, @Scope("prototype") doesn't work when injected into a singleton -
-// the singleton receives one instance that's reused for all calls.
 @Scope("prototype")
 @Slf4j
 public class DiscountService {
-
     @PersistenceContext
     private EntityManager entityManager;
 
-    // Mutable state in a "singleton" service
     private int discountAppliedCount = 0;
 
     public BigDecimal applyDiscount(String code, BigDecimal orderAmount) {
@@ -63,7 +56,6 @@ public class DiscountService {
         discount.setCurrentUsageCount(discount.getCurrentUsageCount() + 1);
         entityManager.merge(discount);
 
-        // BUG: Shared mutable state in prototype-scoped bean used as singleton
         discountAppliedCount++;
         log.info("Discount applied: {}, amount: {}, total times applied in this instance: {}",
                 code, discountAmount, discountAppliedCount);

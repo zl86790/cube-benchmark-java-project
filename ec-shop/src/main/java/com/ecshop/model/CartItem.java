@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,5 +28,5 @@ public class CartItem {
     private Integer quantity;
 
     @Column(name = "unit_price", nullable = false)
-    private BigDecimal unitPrice;
+    private BigDecimal price;
 }

@@ -9,7 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishlistDTO {
-
     private Long id;
     private Long userId;
     private List<WishlistItemDTO> items;

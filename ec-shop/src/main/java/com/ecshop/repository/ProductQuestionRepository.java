@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ProductQuestionRepository extends JpaRepository<ProductQuestion, Long> {
-
     List<ProductQuestion> findByProductIdOrderByCreatedAtDesc(Long productId);
 }

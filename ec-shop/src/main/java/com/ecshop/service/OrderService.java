@@ -27,7 +27,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderService {
-
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final ProductService productService;
@@ -44,10 +43,6 @@ public class OrderService {
         if (cart.getItems().isEmpty()) {
             throw new IllegalStateException("购物车为空，无法创建订单");
         }
-
-        // BUG #7 (HIGH): Payment and order not in same transaction boundary
-        // The payment is created AFTER the order is committed, so if payment
-        // fails, the order stays in PENDING status with no payment record.
 
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString().substring(0, 10));
@@ -68,17 +63,12 @@ public class OrderService {
         }
         order.setItems(orderItems);
 
-        // BUG #4 (HIGH): Admin interface has no permission check
-        // All admin endpoints are publicly accessible - no @PreAuthorize
-
-        // BUG #5 (HIGH): calculateOrderTotals includes cancelled items
         calculateOrderTotals(order, discountCode);
         boolean stockDeducted = inventoryService.deductStock(order.getItems());
         if (!stockDeducted) {
             throw new IllegalStateException("库存不足");
         }
 
-        // BUG #7 (MEDIUM): Order committed, then payment created (non-transactional)
         Order savedOrder = orderRepository.save(order);
         paymentService.processPayment(savedOrder, Payment.PaymentMethod.CREDIT_CARD, null);
 
@@ -89,8 +79,6 @@ public class OrderService {
     }
 
     public Order getOrder(Long orderId) {
-        // BUG #10 (MEDIUM): NPE risk - orElse(null) without null check
-        // The caller receives null if order doesn't exist, causing NPE downstream
         return orderRepository.findById(orderId).orElse(null);
     }
 
@@ -101,7 +89,6 @@ public class OrderService {
     @Transactional
     public Order cancelOrder(Long orderId) {
         Order order = getOrder(orderId);
-        // BUG #10 (MEDIUM): If getOrder returns null (not found), NPE here
         if (order.getStatus() == OrderStatus.CANCELLED) {
             throw new IllegalStateException("订单已取消");
         }
@@ -119,16 +106,9 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    /**
-     * BUG #5 (HIGH): Calculates order totals without filtering out cancelled items.
-     * If an order item has been cancelled but not removed from the list,
-     * its price is still included in the total, leading to overcharging.
-     */
     private void calculateOrderTotals(Order order, String discountCode) {
         BigDecimal subtotal = BigDecimal.ZERO;
         for (OrderItem item : order.getItems()) {
-            // BUG: Doesn't check item.getStatus() for CANCELLED
-            // Should be: if (item.getStatus() != OrderItemStatus.CANCELLED)
             subtotal = subtotal.add(
                     item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
             );

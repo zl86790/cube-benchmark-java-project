@@ -7,7 +7,6 @@ import java.util.List;
 
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
-
     List<PurchaseOrder> findBySupplierId(Long supplierId);
 
     List<PurchaseOrder> findByStatus(PurchaseOrder.PurchaseOrderStatus status);

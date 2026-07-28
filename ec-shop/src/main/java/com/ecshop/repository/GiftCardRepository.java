@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface GiftCardRepository extends JpaRepository<GiftCard, Long> {
-
     Optional<GiftCard> findByCode(String code);
 }

@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewService {
-
     private final ReviewRepository reviewRepository;
     private final ProductService productService;
 
@@ -60,8 +59,8 @@ public class ReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException(id));
     }
 
-    public List<Review> getReviewsByProduct(Long productId) {
-        return reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
+    public List<Review> getReviewsByProduct(Long productId, int limit) {
+        return reviewRepository.findByProductIdOrderByCreatedAtDesc(productId, limit);
     }
 
     public List<Review> getReviewsByUser(Long userId) {

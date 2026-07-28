@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class LoyaltyService {
-
     private final LoyaltyAccountRepository loyaltyAccountRepository;
     private final PointsTransactionRepository pointsTransactionRepository;
 
@@ -46,7 +45,7 @@ public class LoyaltyService {
     }
 
     @Transactional
-    public LoyaltyAccount redeemPoints(Long userId, Long points, String description) {
+    public LoyaltyAccount redeemPoints(Long userId, int points, String description) {
         LoyaltyAccount account = getAccount(userId);
         if (account.getPointsBalance() < points) {
             throw new BusinessException("Insufficient points balance");

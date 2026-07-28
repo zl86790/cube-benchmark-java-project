@@ -17,16 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
-
     private final ProductService productService;
 
     @GetMapping
     public ApiResponse<List<ProductDTO>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        // BUG #8 (MEDIUM): Pagination off-by-one in ProductService.getProducts()
-        // The service uses 'page' directly as zero-based index, but users expect
-        // page=1 to be the first page. So page=1 returns the second page.
         Page<Product> productPage = productService.getProducts(page, size);
         List<ProductDTO> dtos = productService.toDTOList(productPage.getContent());
         return ApiResponse.success(dtos);
@@ -44,7 +40,6 @@ public class ProductController {
         return ApiResponse.success(productService.toDTOList(products));
     }
 
-    // BUG #2 (HIGH): SQL Injection endpoint
     @GetMapping("/advanced-search")
     public ApiResponse<List<ProductDTO>> advancedSearch(
             @RequestParam(required = false) String name,
@@ -57,8 +52,6 @@ public class ProductController {
 
     @PostMapping
     public ApiResponse<ProductDTO> createProduct(@RequestBody Product product) {
-        // BUG #16 (LOW): No validation for product name length
-        // A product could be created with an empty name or extremely long name
         Product created = productService.createProduct(product);
         return ApiResponse.success(productService.toDTO(created));
     }

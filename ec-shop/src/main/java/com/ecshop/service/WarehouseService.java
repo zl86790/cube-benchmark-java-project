@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class WarehouseService {
-
     private final WarehouseRepository warehouseRepository;
     private final WarehouseStockRepository warehouseStockRepository;
     private final ProductService productService;
@@ -35,8 +34,8 @@ public class WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
-    public List<WarehouseStock> getStockByWarehouse(Long warehouseId) {
-        return warehouseStockRepository.findByWarehouseId(warehouseId);
+    public List<WarehouseStock> getStockByWarehouse(Long warehouseId, boolean onlyInStock) {
+        return warehouseStockRepository.findByWarehouseId(warehouseId, onlyInStock);
     }
 
     public List<WarehouseStock> getStockByProduct(Long productId) {

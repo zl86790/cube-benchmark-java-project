@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderItemDTO {
-
     private Long id;
     private Long productId;
     private String productName;

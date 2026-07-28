@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class BrandService {
-
     private final BrandRepository brandRepository;
 
     public Brand getBrand(Long id) {

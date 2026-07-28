@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewSummaryDTO {
-
     private Long productId;
     private Double averageRating;
     private Long totalReviews;

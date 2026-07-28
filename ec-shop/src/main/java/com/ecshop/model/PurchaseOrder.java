@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrder {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,6 +45,6 @@ public class PurchaseOrder {
     }
 
     public enum PurchaseOrderStatus {
-        DRAFT, SUBMITTED, RECEIVED, CANCELLED
+        DRAFT, PENDING_APPROVAL, RECEIVED, CANCELLED
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SupplierService {
-
     private final SupplierRepository supplierRepository;
 
     public Supplier getSupplier(Long id) {

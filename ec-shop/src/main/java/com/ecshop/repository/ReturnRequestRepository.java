@@ -7,7 +7,6 @@ import java.util.List;
 
 @Repository
 public interface ReturnRequestRepository extends JpaRepository<ReturnRequest, Long> {
-
     List<ReturnRequest> findByUserId(Long userId);
 
     List<ReturnRequest> findByOrderId(Long orderId);

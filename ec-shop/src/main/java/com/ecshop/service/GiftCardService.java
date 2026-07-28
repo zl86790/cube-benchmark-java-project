@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class GiftCardService {
-
     private final GiftCardRepository giftCardRepository;
     private final GiftCardTransactionRepository giftCardTransactionRepository;
 
@@ -37,8 +36,7 @@ public class GiftCardService {
     }
 
     public GiftCard getGiftCard(String code) {
-        return giftCardRepository.findByCode(code)
-                .orElseThrow(() -> new GiftCardNotFoundException(code));
+        return giftCardRepository.findByCode(code);
     }
 
     @Transactional

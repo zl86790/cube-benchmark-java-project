@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryReportDTO {
-
     private long totalProducts;
     private long lowStockProducts;
     private long outOfStockProducts;

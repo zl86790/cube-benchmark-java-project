@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/purchase-orders")
 @RequiredArgsConstructor
 public class PurchaseOrderController {
-
     private final PurchaseOrderService purchaseOrderService;
 
     @PostMapping
@@ -26,8 +25,9 @@ public class PurchaseOrderController {
             @PathVariable Long id,
             @RequestParam Long productId,
             @RequestParam Integer quantity,
-            @RequestParam BigDecimal unitCost) {
-        return ApiResponse.success(purchaseOrderService.addItem(id, productId, quantity, unitCost));
+            @RequestParam BigDecimal unitCost,
+            @RequestParam String notes) {
+        return ApiResponse.success(purchaseOrderService.addItem(id, productId, quantity, unitCost, notes));
     }
 
     @PostMapping("/{id}/submit")

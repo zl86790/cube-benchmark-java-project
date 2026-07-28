@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface MembershipTierRepository extends JpaRepository<MembershipTier, Long> {
-
     List<MembershipTier> findAllByOrderByMinSpendAsc();
 }

@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ShippingCarrierRepository extends JpaRepository<ShippingCarrier, Long> {
-
     List<ShippingCarrier> findByIsActiveTrue();
 }

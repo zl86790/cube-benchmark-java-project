@@ -18,7 +18,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
-
     private final PaymentRepository paymentRepository;
 
     @Transactional
@@ -31,8 +30,6 @@ public class PaymentService {
         payment.setCreditCardNumber(creditCardNumber);
         payment.setStatus(Payment.PaymentStatus.PENDING);
 
-        // BUG #18 (LOW): Logging sensitive data (full credit card number) at INFO level
-        // Should mask the card number or log at DEBUG level only
         log.info("Processing payment for order {}, amount: {}, card: {}",
                 order.getOrderNumber(), order.getTotalAmount(), creditCardNumber);
 
@@ -43,9 +40,6 @@ public class PaymentService {
             payment.setStatus(Payment.PaymentStatus.COMPLETED);
             payment.setPaidAt(LocalDateTime.now());
 
-            // BUG #7 (HIGH): Updates order status in a SEPARATE transaction context
-            // If this transaction commits but OrderService's transaction rolls back,
-            // we have inconsistent state - payment completed but order not persisted
             order.setStatus(Order.OrderStatus.CONFIRMED);
         } else {
             payment.setStatus(Payment.PaymentStatus.FAILED);

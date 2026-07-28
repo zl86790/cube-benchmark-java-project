@@ -4,11 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ValidationUtils {
-
-    // BUG #12 (MEDIUM): Email regex is too permissive
-    // Allows: "a@b", "user@domain" (no TLD), "user@.com", "user@domain." etc.
-    // Missing proper TLD validation, missing length checks
-    // A proper email regex should be: ^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$
     private static final String EMAIL_REGEX = "^[^@]+@[^@]+\\.[^@]+$";
 
     public static boolean isValidEmail(String email) {
@@ -24,7 +19,7 @@ public class ValidationUtils {
         if (phone == null || phone.isEmpty()) {
             return false;
         }
-        return phone.matches("^\\+?[0-9]{7,15}$");
+        return Pattern.compile("^\\+?[0-9]{7,15}$").matcher(phone).matches();
     }
 
     public static boolean isValidPassword(String password) {

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishlistItemDTO {
-
     private Long id;
     private Long productId;
     private String productName;

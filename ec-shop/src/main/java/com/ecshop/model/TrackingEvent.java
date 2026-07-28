@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackingEvent {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +21,7 @@ public class TrackingEvent {
     private Shipment shipment;
 
     @Column(nullable = false)
-    private String location;
+    private String place;
 
     @Column(nullable = false)
     private String description;

@@ -2,9 +2,9 @@
 
 一个使用 Spring Boot 3.2.5 + Java 21 + Gradle 构建的电子商务网站，**专门用于测试 AI Agent（如 Codex、Claude、Cursor 等）的系统 Bug 发现和 Debug 能力**。
 
-项目中**预先植入了 20 个运行时 Bug + 15 个编译错误**，涵盖高/中/低三个严重级别（Bug）以及多种常见编译错误类型，涉及并发、安全、数据一致性、精度丢失、资源泄漏等典型企业级应用的常见缺陷。
+项目中预先植入了 **50 个编译错误 + 50 个业务逻辑 Bug**，均按 高 / 中 / 低 三档严重度分类，分布在全项目 200 个 Java 源文件（原始电商主流程的 57 个核心文件 + 18 个后追加的业务模块共 143 个文件）中，覆盖并发、安全（越权/IDOR、SQL 注入、缺失鉴权、敏感信息泄露）、数据一致性、精度丢失、资源泄漏、幂等性、事务边界等企业级应用的典型缺陷类型。
 
-> 说明：15 个编译错误中，CE-1 ~ CE-5 是有意植入的独立、单点错误；CE-6 ~ CE-15 是在核对源码时额外发现但此前未被记录的错误，全部集中在 `service/OrderService.java` 与 `controller/OrderController.java`、`repository/OrderRepository.java`、`service/DiscountService.java`、`service/PaymentService.java`、`model/Order.java`、`model/OrderItem.java` 之间的接口不一致（方法签名、参数个数、字段名、枚举值均对不上）。这些错误已通过实际执行 `gradle compileJava` 并在隔离副本中逐条修复至 `BUILD SUCCESSFUL` 验证无遗漏。
+> 说明：本项目之前的版本包含一批更小规模的 15 编译错误 + 20 运行时 Bug（记录在旧版 README 中）。这些问题此前已被全部修复（编译错误被直接修正；20 个运行时 Bug 的代码位置和内容保持不变，被并入本次的 50 个 Bug 清单，编号为 Bug #1~#20）。本 README 已整体替换为当前代码库实际包含的 50+50 缺陷清单，与代码状态保持一致。
 
 ---
 
@@ -29,79 +29,25 @@ ec-shop/
 ├── build.gradle
 ├── settings.gradle
 ├── README.md
-└── src/
-    └── main/
-        ├── java/com/ecshop/
-        │   ├── EcShopApplication.java          (1)  应用入口
-        │   ├── config/                          (3)  配置类
-        │   │   ├── SecurityConfig.java
-        │   │   ├── WebConfig.java
-        │   │   └── CacheConfig.java
-        │   ├── controller/                      (8)  REST 控制器
-        │   │   ├── ProductController.java
-        │   │   ├── CartController.java
-        │   │   ├── OrderController.java
-        │   │   ├── UserController.java
-        │   │   ├── PaymentController.java
-        │   │   ├── InventoryController.java
-        │   │   ├── CategoryController.java
-        │   │   └── AdminController.java
-        │   ├── service/                         (12) 业务逻辑层
-        │   │   ├── ProductService.java
-        │   │   ├── CartService.java
-        │   │   ├── OrderService.java
-        │   │   ├── UserService.java
-        │   │   ├── PaymentService.java
-        │   │   ├── InventoryService.java
-        │   │   ├── CategoryService.java
-        │   │   ├── TaxService.java
-        │   │   ├── DiscountService.java
-        │   │   ├── ShippingService.java
-        │   │   ├── NotificationService.java
-        │   │   └── AuditService.java
-        │   ├── repository/                      (7)  数据访问层
-        │   │   ├── ProductRepository.java
-        │   │   ├── CartRepository.java
-        │   │   ├── OrderRepository.java
-        │   │   ├── UserRepository.java
-        │   │   ├── PaymentRepository.java
-        │   │   ├── InventoryRepository.java
-        │   │   └── CategoryRepository.java
-        │   ├── model/                           (11) JPA 实体
-        │   │   ├── Product.java
-        │   │   ├── Category.java
-        │   │   ├── User.java
-        │   │   ├── Cart.java
-        │   │   ├── CartItem.java
-        │   │   ├── Order.java
-        │   │   ├── OrderItem.java
-        │   │   ├── Payment.java
-        │   │   ├── Address.java
-        │   │   ├── Discount.java
-        │   │   └── Inventory.java
-        │   ├── dto/                             (8)  数据传输对象
-        │   │   ├── ProductDTO.java
-        │   │   ├── CartDTO.java
-        │   │   ├── CartItemDTO.java
-        │   │   ├── OrderDTO.java
-        │   │   ├── OrderItemDTO.java
-        │   │   ├── UserDTO.java
-        │   │   ├── PaymentDTO.java
-        │   │   └── ApiResponse.java
-        │   ├── exception/                       (4)  异常类
-        │   │   ├── GlobalExceptionHandler.java
-        │   │   ├── BusinessException.java
-        │   │   ├── ProductNotFoundException.java
-        │   │   └── InsufficientInventoryException.java
-        │   └── util/                            (3)  工具类
-        │       ├── PriceCalculator.java
-        │       ├── ValidationUtils.java
-        │       └── DateUtils.java
-        └── resources/
-            └── application.yml
+└── src/main/
+    ├── java/com/ecshop/
+    │   ├── EcShopApplication.java
+    │   ├── config/            配置类：SecurityConfig, WebConfig, CacheConfig
+    │   ├── controller/        REST 控制器（电商主流程 8 个 + 18 个业务模块各 1~2 个）
+    │   ├── service/           业务逻辑层（电商主流程 12 个 + 18 个业务模块各 1~2 个）
+    │   ├── repository/        数据访问层（电商主流程 7 个 + 18 个业务模块各 1~3 个）
+    │   ├── model/              JPA 实体（电商主流程 11 个 + 18 个业务模块各 1~3 个）
+    │   ├── dto/                数据传输对象
+    │   ├── exception/          异常类
+    │   └── util/                工具类：PriceCalculator, ValidationUtils, DateUtils
+    └── resources/application.yml
 ```
 
-**总计: 57 个 Java 源文件**
+**电商主流程核心模块（57 个文件）**：商品 Product、分类 Category、用户 User、购物车 Cart、订单 Order、支付 Payment、库存 Inventory、折扣 Discount、地址 Address。
+
+**后追加的 18 个业务模块（143 个文件）**：商品评价 Review、优惠券 Coupon、收藏夹 Wishlist、物流配送 Shipment、退货退款 Return/Refund、会员积分 Loyalty、站内通知 Notification、搜索 Search、报表统计 Report、仓库 Warehouse、供应商与采购单 Supplier/PurchaseOrder、秒杀促销 Promotion/FlashSale、品牌与标签 Brand/Tag、收货地址簿 AddressBook、礼品卡 GiftCard、商品问答 ProductQA、会员等级 Membership、审计日志 AuditLog。
+
+**总计: 200 个 Java 源文件**
 
 ---
 
@@ -112,839 +58,258 @@ cd ec-shop
 gradle bootRun
 ```
 
-应用启动后访问: `http://localhost:8080`
-
-> **注意**: 项目当前包含 15 个编译错误（详见下方），`gradle compileJava` 会失败。如需正常运行项目，需要先修复这些编译错误。修复 CE-1~CE-5 后 `gradle compileJava` **仍然不会通过**，因为 OrderService.java 相关的 CE-6~CE-15 尚未修复。
+> **注意**: 项目当前包含 50 个编译错误，`gradle compileJava` 会失败。由于 Lombok 注解处理器在遇到大量同时存在的解析失败（尤其是缺失 import 导致的字段类型无法解析）时会提前中止当前编译轮次，**单次 `gradle compileJava` 通常只会展示其中一部分错误**（约 15~20 个），修复这批之后重新编译才会看到下一批。这是刻意保留的特性，用于测试 Agent 能否在多轮编译反馈下持续推进，而不是"看到几个错误就以为改完了"。完整验证方法：反复执行「编译 → 修复当前报错 → 再编译」直到 `BUILD SUCCESSFUL`。
 
 ---
 
-## Bug 清单（共 20 个运行时 Bug + 15 个编译错误）
+## Bug 清单总览（50 个编译错误 + 50 个运行时 Bug）
+
+| 类别 | 高 (High) | 中 (Medium) | 低 (Low) | 合计 |
+|------|-----------|-------------|----------|------|
+| ⚙️ 编译错误 (CE) | 13 | 19 | 18 | **50** |
+| 🐛 运行时 Bug | 17 | 16 | 17 | **50** |
+| **合计** | **30** | **35** | **35** | **100** |
 
 ---
 
-## ⚙️ 编译错误 (Compilation Errors) — 15 个
+## ⚙️ 编译错误 (Compilation Errors) — 50 个
 
-以下 15 个编译错误共同导致项目当前**无法通过 `gradle compileJava`**。CE-1~CE-5 用于测试 AI Agent 从编译器错误信息反向定位源码问题的能力，覆盖了 Java 开发中最常见的编译错误类型；CE-6~CE-15 集中暴露 `OrderService.java` 与其调用方/被调用方之间的接口漂移（签名、参数个数、字段名、枚举值不一致），用于测试 Agent 能否在**多文件间追踪调用链**、一次性识别同一根源导致的连锁编译失败，而不是逐个 symbol 修复。
+CE-1~CE-17 分布在电商主流程的核心文件中；CE-18~CE-50 分布在 18 个后追加业务模块中。类型覆盖：缺少 import、import/引用不存在的类、返回类型与返回值不匹配、调用不存在的方法（含拼写错误）、枚举常量被重命名、字段名/方法名漂移（实体与调用方不一致）、方法调用参数数量或类型错误。相当一部分 CE 是"定义端已修改、调用端未同步"的**跨文件链式错误**（表中标注"链"），需要 Agent 追踪调用链才能一次性定位根因，而不是只改报错的那一行。
 
-### 编译错误总览
+### 总览表
 
-| # | 严重度 | 文件 | 错误类型 | 说明 |
-|---|--------|------|----------|------|
-| CE-1 | ❌ 编译 | `service/OrderService.java` | 缺少 import | 删除了 `import com.ecshop.service.CartService;`，字段 `cartService` 无法解析 |
-| CE-2 | ❌ 编译 | `service/InventoryService.java` | 返回类型不匹配 | `getInventory()` 签名返回 `String`，方法体返回 `Inventory` 对象 |
-| CE-3 | ❌ 编译 | `service/NotificationService.java` | 方法不存在 | 四处调用 `getEmailAddress()`，User 的 Lombok getter 是 `getEmail()` |
-| CE-4 | ❌ 编译 | `service/CartService.java` | 缺少 import | 删除了 `import java.math.BigDecimal;`，`toDTO()` 中 6 处引用全部报错 |
-| CE-5 | ❌ 编译 | `controller/ProductController.java` | 参数数量错误 | `getProducts(page)` 只传 1 个参数，方法签名需要 2 个 `(page, size)` |
-| CE-6 | ❌ 编译 | `service/OrderService.java` | import 了不存在的类 | `import com.ecshop.model.OrderStatus;`，实际是嵌套类 `Order.OrderStatus`，不存在顶层 `OrderStatus` 类 |
-| CE-7 | ❌ 编译 | `service/OrderService.java` | import 了不存在的类 | `import com.ecshop.model.PaymentStatus;`，实际是嵌套类 `Payment.PaymentStatus`，且该 import 全文未被使用 |
-| CE-8 | ❌ 编译 | `service/OrderService.java` | 枚举常量不存在 | `order.setStatus(OrderStatus.NEW)`，但 `Order.OrderStatus` 枚举只有 `PENDING/CONFIRMED/SHIPPED/DELIVERED/CANCELLED/REFUNDED`，没有 `NEW` |
-| CE-9 | ❌ 编译 | `service/OrderService.java` + `model/OrderItem.java` | 方法不存在 | `orderItem.setProductName(...)`（第 63 行）与 `item.getProductName()`（第 167 行），但 `OrderItem` 实体根本没有 `productName` 字段 |
-| CE-10 | ❌ 编译 | `service/OrderService.java` + `service/PaymentService.java` | 参数数量错误 | `paymentService.processPayment(savedOrder)` 只传 1 个参数，但方法签名是 `processPayment(Order order, Payment.PaymentMethod method, String creditCardNumber)`，需要 3 个 |
-| CE-11 | ❌ 编译 | `service/OrderService.java` + `repository/OrderRepository.java` | 参数数量错误 | `orderRepository.findByUserId(userId)` 只传 1 个参数，但仓库方法签名是 `findByUserId(Long userId, Pageable pageable)`，需要 2 个 |
-| CE-12 | ❌ 编译 | `service/OrderService.java` + `service/DiscountService.java` | 方法不存在 | `discountService.calculateDiscount(order)`，但 `DiscountService` 没有这个公开方法（只有 `applyDiscount(String, BigDecimal)` 和私有的 `calculateDiscount(Discount, BigDecimal)`） |
-| CE-13 | ❌ 编译 | `service/OrderService.java` + `model/Order.java` / `dto/OrderDTO.java` | 方法不存在 | `order.setShippingAmount(...)`（第 145 行）与 `order.getShippingAmount()`（第 158 行），但 `Order` 实体和 `OrderDTO` 的字段都叫 `shippingFee`，没有 `shippingAmount` |
-| CE-14 | ❌ 编译 | `controller/OrderController.java` + `service/OrderService.java` | 参数数量错误 | `orderService.createOrder(userId, addressId, discountCode, notes)` 传 4 个参数，但 `OrderService.createOrder()` 只接受 2 个 `(userId, addressId)` |
-| CE-15 | ❌ 编译 | `controller/OrderController.java` + `service/OrderService.java` | 方法不存在 | `orderService.getUserOrders(userId, page, size)`，但 `OrderService` 中根本不存在名为 `getUserOrders` 的方法 |
+| # | 严重度 | 文件 | 类型 | 链? |
+|---|--------|------|------|-----|
+| CE-1 | 🟢 Low | `config/WebConfig.java` | 缺少 import (`CorsRegistry`) | |
+| CE-2 | 🟢 Low | `config/CacheConfig.java` | 返回类型与返回值不匹配 | |
+| CE-3 | 🟡 Medium | `service/UserService.java` + `controller/UserController.java` | 参数数量不匹配 | 链 |
+| CE-4 | 🟢 Low | `controller/CategoryController.java` | 方法名拼写错误 | |
+| CE-5 | 🟢 Low | `controller/PaymentController.java` | 参数类型不匹配 (String→Long) | |
+| CE-6 | 🟡 Medium | `service/UserService.java` | 返回类型与返回值不匹配 (Optional 未解包) | |
+| CE-7 | 🟢 Low | `service/ShippingService.java` | 引用未声明的常量 | |
+| CE-8 | 🟡 Medium | `service/AuditService.java` + `controller/AdminController.java` | 参数数量不匹配（3 处调用点） | 链 |
+| CE-9 | 🔴 High | `repository/CategoryRepository.java` + `service/CategoryService.java` | 泛型 ID 类型不匹配 (Long→String) | 链 |
+| CE-10 | 🔴 High | `repository/PaymentRepository.java` + `service/PaymentService.java` | 方法被重命名，调用方未同步 | 链 |
+| CE-11 | 🔴 High | `model/Discount.java` + `service/DiscountService.java` | 枚举常量被重命名 | 链 |
+| CE-12 | 🔴 High | `model/CartItem.java` + `service/CartService.java`/`OrderService.java` | 字段被重命名（6 处调用点） | 链 |
+| CE-13 | 🟡 Medium | `dto/PaymentDTO.java` + `service/PaymentService.java` | 字段被重命名 | 链 |
+| CE-14 | 🔴 High | `exception/InsufficientInventoryException.java` + `service/InventoryService.java` | 构造函数被删除 | 链 |
+| CE-15 | 🟢 Low | `util/ValidationUtils.java` | 缺少 import (`Pattern`) | |
+| CE-16 | 🟡 Medium | `util/DateUtils.java` | 调用不存在的方法 (`LocalDateTime.toInstant()`) | |
+| CE-17 | 🟢 Low | `util/PriceCalculator.java` | 返回类型与返回值不匹配 | |
+| CE-18 | 🟡 Medium | `service/ReviewService.java` | 参数数量不匹配（repository 方法） | |
+| CE-19 | 🟢 Low | `controller/ReviewController.java` | 缺少 import (`List`) | |
+| CE-20 | 🔴 High | `service/CouponService.java` + `controller/CouponController.java` | 返回类型与返回值不匹配 (Optional 未解包) | 链 |
+| CE-21 | 🟡 Medium | `controller/CouponController.java` | 返回类型误用 (DTO 当实体用) | |
+| CE-22 | 🟡 Medium | `service/WishlistService.java` | 调用不存在的方法（拼写/命名错误） | |
+| CE-23 | 🔴 High | `service/ShipmentService.java` + `controller/ShipmentController.java` | 参数类型不匹配 (Long→String) | 链 |
+| CE-24 | 🟢 Low | `model/TrackingEvent.java` | 字段被重命名 | |
+| CE-25 | 🔴 High | `model/ReturnRequest.java` + `service/ReturnService.java` | 枚举常量被重命名（2 处调用点） | 链 |
+| CE-26 | 🟡 Medium | `service/LoyaltyService.java` | 参数类型不匹配 (Long→int)，内部调用连锁报错 | |
+| CE-27 | 🟢 Low | `model/PointsTransaction.java` | 缺少 import (`LocalDateTime`) | |
+| CE-28 | 🟢 Low | `controller/NotificationController.java` | 方法名拼写错误 | |
+| CE-29 | 🟡 Medium | `service/SearchService.java` | `Comparator.comparing()` 调用方式错误 | |
+| CE-30 | 🟡 Medium | `service/ReportService.java` | 引用不存在的字段/方法 | |
+| CE-31 | 🔴 High | `service/WarehouseService.java` + `controller/WarehouseController.java` | 参数数量不匹配 | 链 |
+| CE-32 | 🟢 Low | `controller/WarehouseController.java` | 缺少 import (`List`) | |
+| CE-33 | 🔴 High | `service/PurchaseOrderService.java` | 类型不匹配 (`Supplier` vs `List<Supplier>`) | |
+| CE-34 | 🔴 High | `controller/PurchaseOrderController.java` + `service/PurchaseOrderService.java` | 参数数量不匹配 | 链 |
+| CE-35 | 🟡 Medium | `model/PurchaseOrderItem.java` + `service/PurchaseOrderService.java` | 字段类型不匹配 (Integer→String) | 链 |
+| CE-36 | 🟡 Medium | `service/PromotionService.java` + `controller/PromotionController.java` | 参数类型不匹配 (Long→String) | 链 |
+| CE-37 | 🟢 Low | `model/FlashSaleItem.java` | 缺少 import (`BigDecimal`) | |
+| CE-38 | 🟡 Medium | `service/TagService.java` | 返回类型与返回值不匹配 (Optional 未解包) | |
+| CE-39 | 🟢 Low | `controller/BrandController.java` | 方法名拼写错误 | |
+| CE-40 | 🟡 Medium | `service/UserAddressService.java` | 参数数量不匹配（repository 方法） | |
+| CE-41 | 🔴 High | `service/GiftCardService.java` | 返回类型与返回值不匹配 (Optional 未解包) | |
+| CE-42 | 🟡 Medium | `controller/GiftCardController.java` + `service/GiftCardService.java` | 参数数量不匹配 | 链 |
+| CE-43 | 🟡 Medium | `service/ProductQAService.java` | 方法名拼写错误（repository 方法） | |
+| CE-44 | 🟢 Low | `model/ProductAnswer.java` | 缺少 import (`LocalDateTime`) | |
+| CE-45 | 🔴 High | `service/MembershipService.java` + `controller/MembershipController.java` | 返回类型不匹配 (`List` vs `Page`)，内部两处调用连锁报错 | 链 |
+| CE-46 | 🟢 Low | `model/UserMembership.java` | 字段被重命名 | |
+| CE-47 | 🟢 Low | `controller/AuditLogController.java` | 方法名拼写错误 | |
+| CE-48 | 🟡 Medium | `model/PurchaseOrder.java` + `service/PurchaseOrderService.java` | 枚举常量被重命名 | 链 |
+| CE-49 | 🟡 Medium | `model/CouponRedemption.java` + `service/CouponService.java` | 字段类型不匹配 (Long→String) | 链 |
+| CE-50 | 🟢 Low | `model/GiftCardTransaction.java` | 字段被重命名（潜伏，暂无调用方直接触发） | |
 
-### 编译错误覆盖类型
+### 关键编译错误详解（节选高严重度项）
 
-| 类型 | 数量 | 对应错误 |
-|------|------|----------|
-| 缺少 import | 2 | CE-1, CE-4 |
-| import/引用了不存在的类 | 2 | CE-6, CE-7 |
-| 返回类型与返回值不匹配 | 1 | CE-2 |
-| 调用不存在的方法 | 4 | CE-3, CE-9, CE-12, CE-15 |
-| 枚举常量不存在 | 1 | CE-8 |
-| 字段名/方法名不匹配（实体与调用方漂移） | 1 | CE-13 |
-| 方法调用参数数量错误 | 4 | CE-5, CE-10, CE-11, CE-14 |
-
----
-
-### CE-1 — OrderService.java：缺少 CartService import
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java` |
-| **行号** | 第 32 行（字段声明） |
-| **类型** | 缺少 import |
-
-**问题描述**:   
-文件顶部的 import 区域删除了 `import com.ecshop.service.CartService;` 这一行，但字段声明：
-
+#### CE-9 — CategoryRepository 泛型 ID 类型不匹配
 ```java
-private final CartService cartService;  // ❌ cannot find symbol: class CartService
+// repository/CategoryRepository.java
+public interface CategoryRepository extends JpaRepository<Category, String> { // ❌ 应为 Long
 ```
+`Category.id` 是 `Long`，但仓库声明的泛型 ID 是 `String`，导致 `CategoryService` 里所有 `categoryRepository.findById(Long id)` 的调用都报参数类型不匹配。**修复**：把泛型改回 `Long`。
 
-仍然存在。编译器会报 `cannot find symbol: class CartService`。
-
-**触发编译**: `gradle compileJava` — 直接报错。
-
-**修复**: 在 import 区域添加：
+#### CE-10 — PaymentRepository.findByOrderId 被重命名
 ```java
-import com.ecshop.service.CartService;
+// repository/PaymentRepository.java
+Optional<Payment> findByOrder_Id(Long orderId); // 原名 findByOrderId，PaymentService 仍在调用旧名
 ```
+**修复**：要么把方法名改回 `findByOrderId`，要么同步修改 `PaymentService.getPaymentByOrderId()` 里的调用。
 
----
-
-### CE-2 — InventoryService.java：返回类型声明错误
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/InventoryService.java` |
-| **方法** | `getInventory()` ＋ `updateInventory()`（连锁） |
-| **类型** | 返回类型不匹配 |
-
-**问题描述**:   
-`getInventory()` 方法签名声明返回 `String`，但方法体实际返回 `Inventory` 对象：
-
+#### CE-11 — Discount.DiscountType 枚举常量被重命名
 ```java
-public String getInventory(Long productId) {   // ❌ 声明返回 String
-    return inventoryRepository.findByProductId(productId)  // 实际返回 Inventory
-            .orElseThrow(...);
+// model/Discount.java
+public enum DiscountType { PERCENT, FIXED_AMOUNT }  // 原为 PERCENTAGE
+// service/DiscountService.java 第 75 行仍引用 Discount.DiscountType.PERCENTAGE
+```
+**修复**：统一两处的常量名。
+
+#### CE-12 — CartItem.unitPrice 被重命名为 price
+```java
+// model/CartItem.java
+private BigDecimal price;  // 原字段名 unitPrice
+```
+`CartService.addItem()`、`CartService.toDTO()`（3 处）、`OrderService.createOrder()`（2 处）都仍在调用 `getUnitPrice()`/`setUnitPrice()`，一次字段重命名连锁触发两个文件共 6 处编译错误。**修复**：统一改回 `unitPrice`，或同步更新所有调用点为 `getPrice()`/`setPrice()`。
+
+#### CE-14 — InsufficientInventoryException 的 String 构造函数被删除
+```java
+// exception/InsufficientInventoryException.java
+// 只剩 InsufficientInventoryException(Long productId, int available, int requested)
+```
+`InventoryService.deductStock()` 仍在调用 `new InsufficientInventoryException("Insufficient stock for product " + ...)`（单参数字符串版本）。**修复**：恢复单参数构造函数，或改造调用点传入 `productId`/`available`/`requested` 三个参数。
+
+#### CE-20 / CE-41 — Optional 未解包（Coupon / GiftCard 各一处，同类模式）
+```java
+// service/CouponService.java
+public Coupon getCoupon(String code) {
+    return couponRepository.findByCode(code); // ❌ 返回 Optional<Coupon>，方法签名是 Coupon
 }
 ```
+GiftCardService.getGiftCard() 与 UserService.getUserByUsername()、TagService.getOrCreateTag() 也是同一类缺陷（CE-6、CE-38），全部是"方法签名写的是解包后的类型，方法体却直接返回了 `Optional<T>`"。**修复**：补上 `.orElseThrow(...)`。
 
-同时 `updateInventory()` 内部调用 `getInventory()` 后将返回值赋给 `Inventory` 类型的变量，并调用其 setter 方法，也会连锁报错：
-
+#### CE-45 — MembershipService.getTiers() 返回类型不匹配
 ```java
-public Inventory updateInventory(...) {
-    Inventory inventory = getInventory(productId);  // ❌ String 不能赋给 Inventory
-    inventory.setAvailableQuantity(quantity);         // ❌ String 没有 setAvailableQuantity()
+// service/MembershipService.java
+public Page<MembershipTier> getTiers() {          // ❌ 声明返回 Page
+    return membershipTierRepository.findAllByOrderByMinSpendAsc(); // 该方法返回 List
+}
+```
+`evaluateTier()` 内部把 `getTiers()` 的结果赋给 `List<MembershipTier>`，`MembershipController` 也按 `List` 处理返回值，因此这一处类型声明错误连锁触发 3 处编译失败。**修复**：把返回类型改回 `List<MembershipTier>`。
+
+---
+
+## 🔴 运行时 Bug 清单 — 50 个
+
+Bug #1~#20 位于电商主流程核心文件中（并发、安全、精度、事务一致性等经典问题）；Bug #21~#50 分布在 18 个后追加业务模块中，新增了多处 **IDOR / 越权访问**（Notification、Review、UserAddress）、**竞态条件**（Coupon、Loyalty、Promotion、GiftCard，与 Bug #1 库存竞态同类）、**幂等性缺失**（Coupon 重复兑换）、**状态机校验缺失**（Shipment、PurchaseOrder 的非法状态跳转）等模式 —— 部分是同一类缺陷在不同模块的重复出现，用于测试 Agent 能否识别"这是同一种模式的第 N 次出现"而不是把每个都当成孤立问题。
+
+### 🔴 高严重度（High）- 17 个
+
+| # | 文件 | 方法 | 描述 |
+|---|------|------|------|
+| Bug #1 | `service/InventoryService.java` | `deductStock()` | 库存扣减竞态条件（check-then-act，无锁），并发下超卖 |
+| Bug #2 | `service/ProductService.java` | `advancedSearch()` | 字符串拼接构建原生 SQL，SQL 注入漏洞 |
+| Bug #3 | `util/PriceCalculator.java` | `calculateDiscount()`/`calculateTax()` | 用 `double`/`float` 做金额计算，精度丢失 |
+| Bug #4 | `controller/AdminController.java` | 全部端点 | 缺少 `@PreAuthorize`，管理接口任何人可调用 |
+| Bug #5 | `service/OrderService.java` | `calculateOrderTotals()` | 订单总额计算未过滤已取消商品行 |
+| Bug #6 | `config/SecurityConfig.java` | `securityFilterChain()` | Session Fixation 防护被禁用 (`sessionFixation().none()`) |
+| Bug #7 | `service/OrderService.java` + `PaymentService.java` | `createOrder()`/`processPayment()` | 订单与支付跨事务边界，数据可能不一致 |
+| Bug #22 | `service/CouponService.java` | `redeem()` | usageCount 竞态条件，并发下可突破 usageLimit |
+| Bug #23 | `service/CouponService.java` | `redeem()` | 未调用已有的 `countByCouponIdAndUserId`，单用户可无限次兑换同一优惠券 |
+| Bug #27 | `service/ReturnService.java` | `processRefund()` | 退款金额无上限校验，可退任意金额 |
+| Bug #28 | `service/LoyaltyService.java` | `redeemPoints()` | 积分余额竞态条件（同 Bug #1 模式），并发下余额可变负 |
+| Bug #29 | `controller/NotificationController.java` | `markRead()` | IDOR：未校验通知归属者，任何人可标记他人通知已读 |
+| Bug #34 | `service/PromotionService.java` | `purchaseFlashSaleItem()` | soldCount 竞态条件（同 Bug #1 模式），并发下秒杀商品可超卖 |
+| Bug #40 | `controller/AuditLogController.java` | 全部端点 | 缺少鉴权，审计日志任何人可读（同 Bug #4 模式） |
+| Bug #41 | `service/GiftCardService.java` | `redeem()` | 余额竞态条件（同 Bug #1/#28 模式），并发下余额可变负 |
+| Bug #42 | `service/ReviewService.java` | `deleteReview()` | IDOR：未校验评价归属者，任何人可删除他人评价 |
+| Bug #48 | `service/UserAddressService.java` | `deleteAddress()` | IDOR：未校验地址归属者，任何人可删除他人收货地址 |
+
+### 🟡 中严重度（Medium）- 16 个
+
+| # | 文件 | 方法 | 描述 |
+|---|------|------|------|
+| Bug #8 | `service/ProductService.java` | `getProducts()` | 分页 off-by-one，`page=1` 实际返回第二页 |
+| Bug #9 | `service/ProductService.java` | `updateProduct()` | `@Cacheable` 缓存更新后未失效，读到脏数据 |
+| Bug #10 | `service/OrderService.java` | `getOrder()` | `orElse(null)` 无空值检查，NPE 风险 |
+| Bug #11 | `service/TaxService.java` | `calculateTax()` | 税额舍入用 `HALF_UP` 而非金融标准 `HALF_EVEN` |
+| Bug #12 | `util/ValidationUtils.java` | `isValidEmail()` | 邮箱正则过于宽松，`a@b`、`user@domain` 都能通过 |
+| Bug #13 | `service/DiscountService.java` | 类级别 `@Scope("prototype")` | prototype 被单例注入，作用域失效，计数器在请求间共享 |
+| Bug #14 | `util/DateUtils.java` | `convertToDate()` 等 | 使用服务器本地时区而非 UTC，跨时区部署时间不一致 |
+| Bug #21 | `service/ReviewService.java` | `markHelpful()` | helpfulCount 读-改-写无锁，并发点赞可能丢失计数 |
+| Bug #25 | `service/ShipmentService.java` | `addTrackingEvent()` | 无终态检查，已 DELIVERED 的运单会被物流事件打回 IN_TRANSIT |
+| Bug #26 | `service/ShipmentService.java` | `markDelivered()` | 无当前状态检查，可从 PREPARING 直接跳到 DELIVERED |
+| Bug #30 | `service/SearchService.java` | `search()` | `categoryId` 与关键词同时传入时被 if/else-if 结构静默忽略 |
+| Bug #31 | `service/ReportService.java` | `getSalesReport()` | 平均订单额分子分母统计口径不一致（分母含已取消订单，分子不含） |
+| Bug #32 | `service/WarehouseService.java` | `setStock()` | 未校验库存数量非负，可被设置为负数 |
+| Bug #33 | `service/PurchaseOrderService.java` | `submit()` | 无当前状态检查，已 RECEIVED/CANCELLED 的采购单可被打回 SUBMITTED |
+| Bug #39 | `service/MembershipService.java` | `evaluateTier()` | 全项目无任何地方调用此方法，会员等级永远不会自动升级 |
+| Bug #50 | `controller/CouponController.java` | `redeemCoupon()` | 无幂等性保护，重复提交会重复兑换优惠券 |
+
+### 🟢 低严重度（Low）- 17 个
+
+| # | 文件 | 方法 | 描述 |
+|---|------|------|------|
+| Bug #15 | `exception/ProductNotFoundException.java` | 构造函数 | 异常消息误写成 "User not found"（复制粘贴遗留） |
+| Bug #16 | `controller/ProductController.java` | `createProduct()` | 未校验商品名称长度/非空 |
+| Bug #17 | `service/AuditService.java` | `writeAuditLog()` | `FileWriter` 从不关闭，资源泄漏 |
+| Bug #18 | `service/PaymentService.java` | `processPayment()` | INFO 级别日志记录完整信用卡号 |
+| Bug #19 | `service/ShippingService.java` | `calculateShippingFee()` | 运费/免运费阈值硬编码，未读取 `application.yml` 配置 |
+| Bug #20 | `service/ProductService.java` | `createProduct()` | 未校验 SKU 是否重复，直接触发数据库唯一约束异常 |
+| Bug #24 | `service/WishlistService.java` | `addItem()` | 未校验商品是否已下架/停用 |
+| Bug #35 | `service/TagService.java` | `tagProduct()` | 未校验重复标签，同一商品可被打上重复的 ProductTag |
+| Bug #36 | `service/UserAddressService.java` | `addAddress()` | 用户的第一个地址若未显式指定 `isDefault=true`，不会自动成为默认地址 |
+| Bug #37 | `service/GiftCardService.java` | `issueGiftCard()` | 未校验金额为正数，可发行零/负余额礼品卡 |
+| Bug #38 | `service/ProductQAService.java` | `askQuestion()` | 未校验问题内容非空 |
+| Bug #43 | `service/BrandService.java` | `createBrand()` | 未预检查品牌名重复，直接抛出底层 `DataIntegrityViolationException` |
+| Bug #44 | `service/SearchService.java` | `search()` | `sortBy` 传入未知值时静默忽略，无默认排序兜底 |
+| Bug #45 | `service/PurchaseOrderService.java` | `receive()` | 未校验采购单是否有商品行，空采购单也能被"收货" |
+| Bug #46 | `service/PromotionService.java` | `addFlashSaleItem()` | 未校验秒杀价低于原价 |
+| Bug #47 | `service/MembershipService.java` | `evaluateTier()` | 多个等级 `minSpend` 相同时，`reduce()` 的选取结果依赖迭代顺序，不确定 |
+| Bug #49 | `service/SupplierService.java` | `createSupplier()` | 未校验联系邮箱格式 |
+
+### 高严重度 Bug 详解（节选新增项）
+
+#### Bug #22/#23 — CouponService.redeem() 双重缺陷
+```java
+// service/CouponService.java
+coupon.setUsageCount(coupon.getUsageCount() + 1);  // Bug #22: 读-改-写无锁，并发可突破 usageLimit
+couponRepository.save(coupon);
+// Bug #23: CouponRedemptionRepository.countByCouponIdAndUserId() 已定义却从未被调用，
+// 导致同一用户可以对同一张优惠券反复调用 redeem() 无限次
+```
+
+#### Bug #29/#42/#48 — 三处重复出现的 IDOR 模式
+```java
+// controller/NotificationController.java
+public ApiResponse<Notification> markRead(@PathVariable Long id) {
+    Notification notification = notificationRepository.findById(id)
+            .orElseThrow(...);   // ❌ 没有检查 notification.getUser() 是否等于当前登录用户
+    notification.setIsRead(true);
     ...
 }
 ```
+`ReviewService.deleteReview()`（Bug #42）与 `UserAddressService.deleteAddress()`（Bug #48）是完全相同的缺陷模式：只按主键查询并操作，从不校验资源归属者身份。三处出现在三个不同模块，是同一类"看似分散、实则同源"的安全缺陷，适合测试 Agent 能否识别跨文件的重复模式。
 
-**修复**: 将 `getInventory()` 的返回类型改为 `Inventory`：
-```java
-public Inventory getInventory(Long productId) { ... }
-```
-
----
-
-### CE-3 — NotificationService.java：调用不存在的方法
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/NotificationService.java` |
-| **行号** | 第 15、20、25、30 行（四处调用） |
-| **类型** | 方法不存在 |
-
-**问题描述**:   
-全部四个方法中调用了 `order.getUser().getEmailAddress()`，但 `User` 类的 email 字段由 Lombok `@Data` 注解自动生成的是 `getEmail()`，`getEmailAddress()` 是拼写错误，该方法不存在：
-
-```java
-public void sendOrderConfirmation(Order order) {
-    log.info("Sending order confirmation email to {} for order {}",
-            order.getUser().getEmailAddress(),  // ❌ cannot find symbol: method getEmailAddress()
-            order.getOrderNumber());
-}
-```
-
-四个方法全部受影响：`sendOrderConfirmation`、`sendOrderShippedNotification`、`sendOrderCancelledNotification`、`sendPaymentFailedNotification`（均为单参数 `(Order order)`，方法内部通过 `order.getUser()` 取得 `User`）。
-
-**修复**: 将所有 `getEmailAddress()` 替换为 `getEmail()`。
-
----
-
-### CE-4 — CartService.java：缺少 BigDecimal import
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/CartService.java` |
-| **方法** | `toDTO()` |
-| **类型** | 缺少 import |
-
-**问题描述**:   
-文件顶部的 import 区域删除了 `import java.math.BigDecimal;`，但 `toDTO()` 方法中大量使用 `BigDecimal`，导致 6 处 `cannot find symbol` 错误：
-
-```java
-// 第 90-92 行
-BigDecimal total = cart.getItems().stream()           // ❌ cannot find symbol
-        .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(...))) // ❌
-        .reduce(BigDecimal.ZERO, BigDecimal::add);     // ❌ ❌
-// 第 102 行
-itemDTO.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(...))); // ❌
-```
-
-**修复**: 在 import 区域添加：
-```java
-import java.math.BigDecimal;
-```
-
----
-
-### CE-5 — ProductController.java：方法调用参数数量错误
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `controller/ProductController.java` |
-| **行号** | 第 31 行 |
-| **类型** | 参数数量不匹配 |
-
-**问题描述**:   
-`getProducts()` 端点中调用 `productService.getProducts(page)` 只传了 1 个参数，但 `ProductService.getProducts(int page, int size)` 需要 2 个参数：
-
-```java
-@GetMapping
-public ApiResponse<List<ProductDTO>> getProducts(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size) {
-    // ❌ method getProducts(int,int) not applicable for argument (int)
-    Page<Product> productPage = productService.getProducts(page);
-    ...
-}
-```
-
-第二个参数 `size` 明明已经在方法参数中声明了，但在调用时被遗漏。
-
-**修复**: 传入第二个参数：
-```java
-Page<Product> productPage = productService.getProducts(page, size);
-```
-
----
-
-### CE-6 — OrderService.java：import 了不存在的顶层类 OrderStatus
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java` |
-| **行号** | 第 9 行 |
-| **类型** | import 了不存在的类 |
-
-**问题描述**:   
-```java
-import com.ecshop.model.OrderStatus;  // ❌ cannot find symbol: class OrderStatus
-```
-`OrderStatus` 并不是 `com.ecshop.model` 包下的顶层类，而是定义在 `Order` 实体内部的嵌套枚举 `Order.OrderStatus`（见 `model/Order.java` 第 40-42 行）。文件中后续 `OrderStatus.CANCELLED`、`OrderStatus.SHIPPED` 等引用都依赖这个错误的 import。
-
-**修复**: 
-```java
-import com.ecshop.model.Order.OrderStatus;
-```
-
----
-
-### CE-7 — OrderService.java：import 了不存在的顶层类 PaymentStatus
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java` |
-| **行号** | 第 10 行 |
-| **类型** | import 了不存在的类 |
-
-**问题描述**:   
-```java
-import com.ecshop.model.PaymentStatus;  // ❌ cannot find symbol: class PaymentStatus
-```
-与 CE-6 同类问题：`PaymentStatus` 实际是 `Payment` 实体内部的嵌套枚举 `Payment.PaymentStatus`（见 `model/Payment.java` 第 57 行）。更进一步，这个 import 在 `OrderService.java` 全文中**从未被使用**——修复方式不是改成 `import com.ecshop.model.Payment.PaymentStatus;`，而应该直接**删除**这行无用 import。
-
-**修复**: 删除该行 import。
-
----
-
-### CE-8 — OrderService.java：使用了不存在的枚举常量 OrderStatus.NEW
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java` |
-| **方法** | `createOrder()` |
-| **行号** | 第 55 行 |
-| **类型** | 枚举常量不存在 |
-
-**问题描述**:   
-```java
-order.setStatus(OrderStatus.NEW);  // ❌ cannot find symbol: variable NEW
-```
-`Order.OrderStatus` 枚举定义为：
-```java
-public enum OrderStatus {
-    PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, REFUNDED
-}
-```
-即使 CE-6 的 import 修复后，`NEW` 也不是该枚举的合法值。即修好 import 之后编译仍会在这一行报错。
-
-**修复**: 根据业务语义改为 `OrderStatus.PENDING`（新建订单的初始状态）。
-
----
-
-### CE-9 — OrderService.java + OrderItem.java：OrderItem 没有 productName 字段
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java`（调用方）、`model/OrderItem.java`（缺失字段） |
-| **行号** | `OrderService.java` 第 63 行、第 167 行 |
-| **类型** | 方法不存在 |
-
-**问题描述**:   
-```java
-orderItem.setProductName(cartItem.getProduct().getName());  // ❌ cannot find symbol: method setProductName
-...
-itemDTO.setProductName(item.getProductName());              // ❌ cannot find symbol: method getProductName
-```
-`OrderItem` 实体（`model/OrderItem.java`）只有 `id`、`order`、`product`、`quantity`、`unitPrice`、`subtotal`、`status` 字段，没有 `productName`。`OrderItemDTO.setProductName()` 本身是存在的（DTO 里有这个字段），问题出在 `OrderItem` **实体**缺少对应字段。
-
-**修复**: 要么在 `OrderItem` 实体中新增 `productName` 字段并生成对应 getter/setter，要么改为在 DTO 转换时从 `item.getProduct().getName()` 取值（并删除第 63 行对不存在字段的赋值）。
-
----
-
-### CE-10 — OrderService.java + PaymentService.java：processPayment() 参数数量不匹配
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java`（调用方）、`service/PaymentService.java`（方法定义） |
-| **行号** | `OrderService.java` 第 82 行 |
-| **类型** | 方法调用参数数量错误 |
-
-**问题描述**:   
-```java
-paymentService.processPayment(savedOrder);
-// ❌ method processPayment(Order,Payment.PaymentMethod,String) cannot be applied to given types
-```
-`PaymentService.processPayment()` 的实际签名是 `processPayment(Order order, Payment.PaymentMethod method, String creditCardNumber)`，需要 3 个参数，调用处只传了 1 个。
-
-**修复**: 补齐支付方式和卡号参数，例如：
-```java
-paymentService.processPayment(savedOrder, Payment.PaymentMethod.CREDIT_CARD, creditCardNumber);
-```
-（`creditCardNumber` 需要作为 `createOrder()` 的入参传入，当前方法签名里也没有这个参数，属于同一处需要一并设计的接口缺口。）
-
----
-
-### CE-11 — OrderService.java + OrderRepository.java：findByUserId() 参数数量不匹配
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java`（调用方）、`repository/OrderRepository.java`（方法定义） |
-| **方法** | `getOrdersByUserId()` |
-| **行号** | `OrderService.java` 第 97 行 |
-| **类型** | 方法调用参数数量错误 |
-
-**问题描述**:   
-```java
-public List<Order> getOrdersByUserId(Long userId) {
-    return orderRepository.findByUserId(userId);
-    // ❌ method findByUserId(Long,Pageable) cannot be applied to given types
-}
-```
-`OrderRepository` 中定义的是 `Page<Order> findByUserId(Long userId, Pageable pageable)`，需要分页参数，而这里只传了 `userId`，且返回类型也对不上（方法声明返回 `List<Order>`，仓库方法返回 `Page<Order>`）。
-
-**修复**: 要么给 `getOrdersByUserId()` 增加分页参数并返回 `Page<Order>`，要么在 `OrderRepository` 中新增一个不分页的 `List<Order> findByUserId(Long userId)` 方法。
-
----
-
-### CE-12 — OrderService.java + DiscountService.java：calculateDiscount(Order) 方法不存在
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java`（调用方）、`service/DiscountService.java`（方法定义） |
-| **方法** | `calculateOrderTotals()` |
-| **行号** | `OrderService.java` 第 137 行 |
-| **类型** | 方法不存在 |
-
-**问题描述**:   
-```java
-BigDecimal discount = discountService.calculateDiscount(order);
-// ❌ cannot find symbol: method calculateDiscount(Order)
-```
-`DiscountService` 里唯一的公开折扣入口是 `applyDiscount(String code, BigDecimal orderAmount)`；另有一个私有方法 `calculateDiscount(Discount discount, BigDecimal orderAmount)`，签名不同且不可见。调用方传入的是整个 `Order` 对象，两者都对不上。
-
-**修复**: 改为调用 `discountService.applyDiscount(order.getDiscountCode(), subtotal)`（前提是 `Order` 需要有折扣码字段，当前也没有），或者在 `DiscountService` 中新增一个接受 `Order` 的公开重载方法。
-
----
-
-### CE-13 — OrderService.java + Order.java / OrderDTO.java：shippingAmount 字段名不匹配
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `service/OrderService.java`（调用方）、`model/Order.java` + `dto/OrderDTO.java`（字段定义） |
-| **行号** | `OrderService.java` 第 145 行、第 158 行 |
-| **类型** | 方法不存在（字段名漂移） |
-
-**问题描述**:   
-```java
-order.setShippingAmount(shipping);            // 第145行 ❌ cannot find symbol
-...
-dto.setShippingAmount(order.getShippingAmount());  // 第158行 ❌ 两处都找不到符号
-```
-`Order` 实体和 `OrderDTO` 中的字段都叫 `shippingFee`（对应 `getShippingFee()`/`setShippingFee()`），全项目没有任何地方定义过 `shippingAmount`。
-
-**修复**: 统一改用 `getShippingFee()` / `setShippingFee()`。
-
----
-
-### CE-14 — OrderController.java + OrderService.java：createOrder() 参数数量不匹配
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `controller/OrderController.java`（调用方）、`service/OrderService.java`（方法定义） |
-| **行号** | `OrderController.java` 第 24 行 |
-| **类型** | 方法调用参数数量错误 |
-
-**问题描述**:   
-```java
-Order order = orderService.createOrder(userId, addressId, discountCode, notes);
-// ❌ method createOrder(Long,Long) cannot be applied to given types
-```
-控制器按 4 个参数 `(userId, addressId, discountCode, notes)` 调用，但 `OrderService.createOrder()` 只接受 2 个参数 `(Long userId, Long addressId)`，完全不处理折扣码和备注。
-
-**修复**: 给 `OrderService.createOrder()` 增加 `discountCode`、`notes` 两个参数，并在方法体内接入折扣逻辑（同时也是修复 CE-12 的关联点）。
-
----
-
-### CE-15 — OrderController.java + OrderService.java：getUserOrders() 方法不存在
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | ❌ 编译错误 |
-| **文件** | `controller/OrderController.java`（调用方）、`service/OrderService.java`（缺失方法） |
-| **行号** | `OrderController.java` 第 39 行 |
-| **类型** | 方法不存在 |
-
-**问题描述**:   
-```java
-Page<Order> orders = orderService.getUserOrders(userId, page, size);
-// ❌ cannot find symbol: method getUserOrders(Long,int,int)
-```
-`OrderService` 中只有不分页的 `getOrdersByUserId(Long userId)`（本身也因 CE-11 无法编译），没有任何名为 `getUserOrders` 的分页方法。
-
-**修复**: 在 `OrderService` 中新增：
-```java
-public Page<Order> getUserOrders(Long userId, int page, int size) {
-    return orderRepository.findByUserId(userId, PageRequest.of(page, size));
-}
-```
-
----
-
-## 🔴 运行时 Bug 清单
-
----
-
-### 🔴 高严重度（High）- 7 个
-
-这些 Bug 可直接导致系统崩溃、数据丢失、安全漏洞或资金损失。
-
----
-
-#### Bug #1 - 库存扣减竞态条件 (Race Condition)
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `service/InventoryService.java` |
-| **方法** | `deductStock()` |
-| **类型** | 并发安全 |
-
-**问题描述**:   
-`deductStock()` 方法在执行库存检查和扣减之间没有加锁或使用悲观锁。当多个并发请求同时扣减同一商品的库存时，会出现 **check-then-act** 竞态条件：
-
-```java
-// Thread 1 和 Thread 2 同时读到 availableQuantity = 5
-// 两个请求都请求 4 个，都通过了检查
-// 最终 availableQuantity = 5 - 4 - 4 = -3，出现超卖
-```
-
-**正确做法**: 使用 `@Lock(LockModeType.PESSIMISTIC_WRITE)` 或数据库行级锁/乐观锁 `@Version`。
-
----
-
-#### Bug #2 - SQL 注入漏洞
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `service/ProductService.java` |
-| **方法** | `advancedSearch()` |
-| **类型** | 安全漏洞 |
-
-**问题描述**:   
-`advancedSearch()` 方法使用字符串拼接构建原生 SQL 查询，攻击者可通过搜索参数注入恶意 SQL：
-
-```java
-// 输入: name = "'; DROP TABLE products; --"
-StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
-sql.append(" AND name LIKE '%").append(name).append("%'"); // 直接拼接!
-```
-
-通过 `GET /api/products/advanced-search?name='; DROP TABLE products; --` 即可执行任意 SQL。
-
----
-
-#### Bug #3 - 金额精度丢失
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `util/PriceCalculator.java` |
-| **方法** | `calculateDiscount()`, `calculateTax()` |
-| **类型** | 数值精度 |
-
-**问题描述**:   
-价格计算使用了 Java 的 `double` 和 `float` 浮点类型，而非 `BigDecimal`。浮点数无法精确表示十进制小数（如 0.1），导致金额计算出现误差：
-
-```java
-// double price = 0.1 + 0.2; // 结果: 0.30000000000000004, 不是 0.3
-public double calculateDiscount(double price, double discountPercent) { ... }
-```
-
-在电商系统中，这种精度误差会累积，导致财务报表不平、对账错误。
-
----
-
-#### Bug #4 - 缺少权限检查
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `controller/AdminController.java` |
-| **方法** | `deleteProduct()`, `getAllUsers()`, `featureProduct()` |
-| **类型** | 安全漏洞 - 授权缺失 |
-
-**问题描述**:   
-`AdminController` 中的所有管理端点都没有 `@PreAuthorize("hasRole('ADMIN')")` 注解，且 Spring Security 配置中对 `/api/**` 全部 `permitAll()`。这意味着**任何未认证的用户都可以执行管理操作**，包括删除商品、查看所有用户、设置精选商品等。
-
----
-
-#### Bug #5 - 订单总额计算忽略已取消商品
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `service/OrderService.java` |
-| **方法** | `calculateOrderTotals()` |
-| **类型** | 业务逻辑错误 |
-
-**问题描述**:   
-`calculateOrderTotals()` 在计算订单总额时，对**所有** `OrderItem` 求和（包括状态为 `CANCELLED` 或 `RETURNED` 的商品行）：
-
-```java
-BigDecimal subtotal = order.getItems().stream()
-    .map(OrderItem::getSubtotal)
-    .reduce(BigDecimal.ZERO, BigDecimal::add);
-// 没有过滤: .filter(item -> item.getStatus() != ItemStatus.CANCELLED)
-```
-
-这导致用户即使取消了部分商品，仍被收取这些商品的费用。
-
----
-
-#### Bug #6 - Session Fixation 防护被禁用
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `config/SecurityConfig.java` |
-| **方法** | `securityFilterChain()` |
-| **类型** | 安全漏洞 |
-
-**问题描述**:   
-Security 配置中明确禁用了 Session Fixation 防护：
-
-```java
-.sessionFixation(sessionFixation -> sessionFixation.none()) // 应该是 .migrateSession()
-```
-
-攻击者可以预先设置一个 Session ID，诱导受害者使用该 Session 登录，之后攻击者即可使用相同的 Session ID 劫持已认证的会话。
-
----
-
-#### Bug #7 - 支付与订单跨事务不一致
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🔴 High |
-| **文件** | `service/OrderService.java` + `service/PaymentService.java` |
-| **方法** | `createOrder()` + `processPayment()` |
-| **类型** | 事务一致性 |
-
-**问题描述**:   
-`OrderService.createOrder()` 在 `@Transactional` 方法中保存订单并清空购物车后提交事务，但 `PaymentService.processPayment()` 是**在事务外**被调用的（或在不同事务中）。这导致：
-
-1. 订单已存入数据库，但支付失败 → 订单存在却无支付记录
-2. 支付成功提交了事务，但订单事务回滚 → 支付成功但订单丢失
-
-应使用分布式事务（如 Saga 模式）或将支付纳入同一事务边界。
-
----
-
-### 🟡 中严重度（Medium）- 7 个
-
-这些问题可能导致数据错误、性能问题或有限的安全风险。
-
----
-
-#### Bug #8 - 分页 off-by-one 错误
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `service/ProductService.java` |
-| **方法** | `getProducts()` |
-| **类型** | 逻辑错误 |
-
-**问题描述**:   
-`PageRequest.of(page, size)` 中的 `page` 参数是零基索引（0 = 第一页），但 API 用户通常期望 `page=1` 是第一页。当前实现将 `page=1` 直接传给 `PageRequest.of(1, size)`，返回的是**第二页**。
-
-**修复**: 应使用 `PageRequest.of(page - 1, size)`（当 page >= 1 时）。
-
----
-
-#### Bug #9 - 缓存未失效
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `service/ProductService.java` |
-| **方法** | `updateProduct()` |
-| **类型** | 缓存一致性 |
-
-**问题描述**:   
-`getProduct()` 使用了 `@Cacheable(value = "products", key = "#id")` 缓存，但 `updateProduct()` 没有使用 `@CachePut` 或 `@CacheEvict` 使缓存失效。更新商品后，后续 `getProduct()` 读取仍返回旧数据。
-
----
-
-#### Bug #10 - NPE 风险（懒加载）
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `service/OrderService.java` |
-| **方法** | `getOrder()` |
-| **类型** | 空指针异常 |
-
-**问题描述**:   
-`getOrder()` 返回的 `Order` 对象中，`items` 字段可能因懒加载而未初始化。当 DTO 转换代码访问 `order.getItems()` 时，如果 Hibernate Session 已关闭，会抛出 `LazyInitializationException`。此外，`toDTO()` 方法中直接访问 `item.getProduct().getId()` 和 `item.getProduct().getName()` 在 Product 为 null 或懒加载未初始化时也会 NPE。
-
----
-
-#### Bug #11 - 税率舍入模式错误
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `service/TaxService.java` |
-| **方法** | `calculateTax()` |
-| **类型** | 数值计算规范 |
-
-**问题描述**:   
-税额计算使用了 `RoundingMode.HALF_UP`（四舍五入），而金融行业标准是 `HALF_EVEN`（银行家舍入法）。在大量交易中，`HALF_UP` 会产生累积偏差（总是向上舍入 0.5），导致总税额系统性偏高。
-
----
-
-#### Bug #12 - 邮箱验证正则过宽松
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `util/ValidationUtils.java` |
-| **方法** | `isValidEmail()` |
-| **类型** | 输入验证不足 |
-
-**问题描述**:   
-邮箱验证正则 `^[^@]+@[^@]+\\.[^@]+$` 过于宽松，接受以下无效邮箱：
-- `a@b` - 无有效域名
-- `user@domain` - 缺少 TLD
-- `user@.com` - 域名部分为空
-- `@domain.com` - 用户名为空（第一个 `+` 改为 `*` 才行）
-
-正确的正则应为 `^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$`。
-
----
-
-#### Bug #13 - Prototype 作用域误用
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `service/DiscountService.java` |
-| **方法** | 类级别 `@Scope("prototype")` |
-| **类型** | Spring Bean 作用域错误 |
-
-**问题描述**:   
-`DiscountService` 被标记为 `@Scope("prototype")`，但它被 `OrderService`（单例）通过构造函数注入。由于 Spring 默认在单例初始化时只注入一次依赖，`OrderService` 持有的 `DiscountService` 实例**始终是同一个**，prototype 作用域不生效。更糟的是，`discountAppliedCount` 字段本意是每请求独立的计数器，但实际上**所有请求共享同一实例**，计数器完全不准确。
-
----
-
-#### Bug #14 - 时区处理错误
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟡 Medium |
-| **文件** | `util/DateUtils.java` |
-| **方法** | `convertToDate()`, `convertToLocalDateTime()`, `formatDateTime()` |
-| **类型** | 国际化/时区问题 |
-
-**问题描述**:   
-所有日期转换都使用 `ZoneId.systemDefault()`（服务器本地时区）而非 UTC。当服务器部署在不同时区时，订单创建时间、支付时间等会不一致。正确做法是内部统一使用 UTC 存储，仅在展示层转换到用户时区。
-
----
-
-### 🟢 低严重度（Low）- 6 个
-
-这些是代码质量问题，不会直接导致功能错误但有维护隐患。
-
----
-
-#### Bug #15 - 错误消息误导
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `exception/ProductNotFoundException.java` |
-| **方法** | 构造函数 |
-| **类型** | 代码质量问题 |
-
-**问题描述**:   
-`ProductNotFoundException` 的异常消息写的是 "**User** not found"，显然是复制粘贴遗留的错误。当商品不存在时，日志和 API 响应都显示 "User not found"，严重误导调试和客户端错误处理。
-
----
-
-#### Bug #16 - 缺少输入验证
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `controller/ProductController.java` |
-| **方法** | `createProduct()` |
-| **类型** | 输入验证缺失 |
-
-**问题描述**:   
-创建商品的接口没有对 `name` 字段进行长度和空值校验。可以创建名称为空字符串或 10000 字符的商品，数据库层面可能抛出异常或存储无效数据。
-
----
-
-#### Bug #17 - 资源泄漏（未关闭 FileWriter）
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `service/AuditService.java` |
-| **方法** | `writeAuditLog()` |
-| **类型** | 资源泄漏 |
-
-**问题描述**:   
-`writeAuditLog()` 每次调用都创建 `new FileWriter()` 但从不关闭。在高并发场景下，文件描述符会逐渐耗尽，最终导致 `IOException: Too many open files`。应使用 try-with-resources：
-
-```java
-try (FileWriter writer = new FileWriter(AUDIT_LOG_FILE, true)) {
-    writer.write(logEntry);
-}
-```
-
----
-
-#### Bug #18 - 敏感数据日志泄露
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `service/PaymentService.java` |
-| **方法** | `processPayment()` |
-| **类型** | 安全 - 日志泄露 |
-
-**问题描述**:   
-支付处理时在 **INFO** 级别日志中记录完整的信用卡号：
-
-```java
-log.info("Processing payment for order {}, amount: {}, card: {}",
-    order.getOrderNumber(), order.getTotalAmount(), creditCardNumber);
-```
-
-信用卡号是 PCI-DSS 合规要求的敏感数据，不应记录在任何日志中。即使需要日志，也应在 DEBUG 级别且脱敏（如 `****1234`）。
-
----
-
-#### Bug #19 - 硬编码配置值
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `service/ShippingService.java` |
-| **方法** | `calculateShippingFee()` |
-| **类型** | 配置管理 |
-
-**问题描述**:   
-运费和免运费阈值硬编码在代码中（`BASE_SHIPPING_FEE = 15.00`），虽然 `application.yml` 中已配置了 `ecshop.shipping.base-fee` 和 `ecshop.shipping.free-shipping-threshold`，但 `ShippingService` 没有通过 `@Value` 读取，修改运费需要改代码重新部署。
-
----
-
-#### Bug #20 - 重复 SKU 未校验
-
-| 属性 | 值 |
-|------|-----|
-| **严重度** | 🟢 Low |
-| **文件** | `service/ProductService.java` |
-| **方法** | `createProduct()` |
-| **类型** | 数据完整性 |
-
-**问题描述**:   
-创建商品时没有调用 `productRepository.existsBySku()` 检查 SKU 是否已存在。虽然数据库有 `UNIQUE` 约束（`@Column(unique = true)`），但这会导致数据库抛出 `DataIntegrityViolationException` 而非友好的业务异常，且异常消息对用户不友好。
+#### Bug #28/#34/#41 — 与 Bug #1 同构的竞态条件家族
+`InventoryService.deductStock()`（Bug #1）、`LoyaltyService.redeemPoints()`（Bug #28）、`PromotionService.purchaseFlashSaleItem()`（Bug #34）、`GiftCardService.redeem()`（Bug #41）、`CouponService.redeem()`（Bug #22）全部是"先读余额/库存/次数 → 判断是否足够 → 再写回"的三段式操作，中间没有任何锁（悲观锁、乐观锁 `@Version`、数据库行级锁均未使用），在并发请求下都会出现超卖/透支。这是本项目中出现频率最高的单一缺陷模式（5 次独立实例）。
 
 ---
 
 ## 对 AI Agent 的评估维度
 
-测试 AI Agent 时应关注以下能力：
-
 ### 1. 发现能力
-- Agent 是否能够通过代码审查发现所有 20 个运行时 Bug 和 15 个编译错误？
-- 是否能理解业务逻辑而非仅检查语法错误？
-- 是否能够在多文件之间追踪调用链发现问题？
-- 能否从编译器错误信息反向定位到源码中的具体问题？
+- Agent 能否发现全部 50 个编译错误 + 50 个运行时 Bug？
+- 能否理解业务逻辑而非仅检查语法错误？
+- 能否在跨文件（甚至跨模块）之间追踪调用链？
+- 能否从编译器的单轮报错中意识到"修复后还会有更多"，主动进行多轮编译验证？
+- 能否识别同一缺陷模式在不同模块中的重复出现（如 5 处竞态条件、3 处 IDOR）？
 
 ### 2. 分析能力
-- 是否能正确判断每个 Bug 的严重度级别？
-- 是否能推理出 Bug 的触发条件和影响范围？
-- 对并发、安全等复杂 Bug 的分析深度如何？
-- 对编译错误的类型分类是否准确？
+- 能否正确判断每个 Bug/CE 的严重度级别？
+- 能否推理出触发条件和影响范围（尤其是并发类和安全类问题）？
+- 对编译错误的类型分类是否准确（缺少 import / 类型不匹配 / 方法不存在 / 参数错误）？
 
 ### 3. 修复能力
 - 修复方案是否正确且完整？
 - 修复某个 Bug 时是否引入了新的 Bug？
-- 是否考虑了修复对上下游代码的影响？
-- 编译错误的修复是否一步到位（而非逐文件逐个修复）？
+- 是否考虑了修复对上下游代码的影响（尤其是链式编译错误）？
+- 编译错误的修复是否一次性覆盖了所有连锁调用点？
 
 ### 4. 沟通能力
 - 是否能用清晰的语言解释 Bug 原因和修复方案？
-- 是否能按照严重度优先级排序修复建议？
+- 是否能按严重度优先级排序修复建议？
 - 是否能区分编译错误和运行时 Bug 的不同评估标准？
-
----
-
-## API 端点概览
-
-| 方法 | 端点 | 说明 |
-|------|------|------|
-| GET | `/api/products?page=0&size=20` | 商品列表（⚠️ Bug #8） |
-| GET | `/api/products/{id}` | 商品详情（⚠️ Bug #9） |
-| GET | `/api/products/search?keyword=xxx` | 商品搜索 |
-| GET | `/api/products/advanced-search?name=...&category=...` | 高级搜索（⚠️ Bug #2） |
-| POST | `/api/products` | 创建商品（⚠️ Bug #16, #20） |
-| PUT | `/api/products/{id}` | 更新商品（⚠️ Bug #9） |
-| GET | `/api/cart/{userId}` | 购物车 |
-| POST | `/api/cart/{userId}/items?productId=&quantity=` | 添加商品 |
-| POST | `/api/orders?userId=&addressId=&discountCode=` | 创建订单（⚠️ Bug #1, #5, #7） |
-| GET | `/api/orders/{id}` | 订单详情（⚠️ Bug #10） |
-| POST | `/api/orders/{id}/cancel` | 取消订单 |
-| POST | `/api/users/register` | 用户注册（⚠️ Bug #12） |
-| DELETE | `/api/admin/products/{id}` | 删除商品（⚠️ Bug #4） |
-| POST | `/api/admin/products/{id}/feature` | 精选商品（⚠️ Bug #4） |
-| GET | `/api/inventory/product/{productId}` | 库存查询 |
 
 ---
 

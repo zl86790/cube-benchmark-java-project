@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftCardTransaction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +29,11 @@ public class GiftCardTransaction {
     private BigDecimal amount;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime occurredAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        occurredAt = LocalDateTime.now();
     }
 
     public enum TransactionType {

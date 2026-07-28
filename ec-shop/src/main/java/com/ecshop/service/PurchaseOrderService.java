@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PurchaseOrderService {
-
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final SupplierService supplierService;
     private final ProductService productService;
@@ -27,7 +26,7 @@ public class PurchaseOrderService {
 
     @Transactional
     public PurchaseOrder createPurchaseOrder(Long supplierId) {
-        Supplier supplier = supplierService.getSupplier(supplierId);
+        List<Supplier> supplier = supplierService.getSupplier(supplierId);
         PurchaseOrder order = new PurchaseOrder();
         order.setSupplier(supplier);
         return purchaseOrderRepository.save(order);

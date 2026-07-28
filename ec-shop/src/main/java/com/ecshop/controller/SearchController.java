@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @RequestMapping("/api/search")
 @RequiredArgsConstructor
 public class SearchController {
-
     private final SearchService searchService;
 
     @GetMapping("/products")

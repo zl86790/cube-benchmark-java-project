@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SalesReportDTO {
-
     private long totalOrders;
     private BigDecimal totalRevenue;
     private BigDecimal averageOrderValue;

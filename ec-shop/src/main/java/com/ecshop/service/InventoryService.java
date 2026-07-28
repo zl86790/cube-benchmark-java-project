@@ -16,13 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class InventoryService {
-
     private final InventoryRepository inventoryRepository;
 
-    // BUG #1 (HIGH): Race condition - no synchronization or locking
-    // When multiple concurrent orders try to deduct the same product's stock,
-    // they can both read the same availableQuantity, both pass the check,
-    // and both deduct, leading to overselling (negative inventory).
     @Transactional
     public boolean deductStock(List<OrderItem> items) {
         for (OrderItem item : items) {

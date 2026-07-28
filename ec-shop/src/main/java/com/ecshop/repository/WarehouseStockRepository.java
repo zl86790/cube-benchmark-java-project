@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, Long> {
-
     List<WarehouseStock> findByWarehouseId(Long warehouseId);
 
     List<WarehouseStock> findByProductId(Long productId);

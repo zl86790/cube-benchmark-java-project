@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftCardTransactionDTO {
-
     private Long id;
     private String type;
     private BigDecimal amount;

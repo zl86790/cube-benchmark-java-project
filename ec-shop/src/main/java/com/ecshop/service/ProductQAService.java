@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductQAService {
-
     private final ProductQuestionRepository productQuestionRepository;
     private final ProductAnswerRepository productAnswerRepository;
     private final ProductService productService;
@@ -53,6 +52,6 @@ public class ProductQAService {
     }
 
     public List<ProductQuestion> getQuestionsByProduct(Long productId) {
-        return productQuestionRepository.findByProductIdOrderByCreatedAtDesc(productId);
+        return productQuestionRepository.findByProductIdOrderByCreateDateDesc(productId);
     }
 }

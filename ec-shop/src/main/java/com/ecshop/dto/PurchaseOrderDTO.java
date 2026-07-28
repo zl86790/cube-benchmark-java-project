@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderDTO {
-
     private Long id;
     private Long supplierId;
     private String supplierName;

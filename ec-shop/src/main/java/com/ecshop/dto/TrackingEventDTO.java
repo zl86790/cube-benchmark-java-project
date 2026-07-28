@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackingEventDTO {
-
     private Long id;
     private String location;
     private String description;

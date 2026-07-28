@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RefundRecordDTO {
-
     private Long id;
     private Long returnRequestId;
     private BigDecimal amount;

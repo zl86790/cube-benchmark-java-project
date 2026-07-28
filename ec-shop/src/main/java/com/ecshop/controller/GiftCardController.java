@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/gift-cards")
 @RequiredArgsConstructor
 public class GiftCardController {
-
     private final GiftCardService giftCardService;
 
     @PostMapping
@@ -30,6 +29,6 @@ public class GiftCardController {
 
     @PostMapping("/{code}/redeem")
     public ApiResponse<GiftCard> redeem(@PathVariable String code, @RequestParam BigDecimal amount) {
-        return ApiResponse.success(giftCardService.redeem(code, amount));
+        return ApiResponse.success(giftCardService.redeem(code, amount, "customer request"));
     }
 }
