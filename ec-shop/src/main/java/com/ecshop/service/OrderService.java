@@ -5,15 +5,15 @@ import com.ecshop.dto.OrderItemDTO;
 import com.ecshop.model.Cart;
 import com.ecshop.model.CartItem;
 import com.ecshop.model.Order;
+import com.ecshop.model.Order.OrderStatus;
 import com.ecshop.model.OrderItem;
-import com.ecshop.model.OrderStatus;
-import com.ecshop.model.PaymentStatus;
+import com.ecshop.model.Payment;
 import com.ecshop.model.User;
 import com.ecshop.repository.OrderRepository;
-// COMPILE ERROR #1: Missing import for CartService
-// import com.ecshop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +39,7 @@ public class OrderService {
     private final NotificationService notificationService;
 
     @Transactional
-    public Order createOrder(Long userId, Long addressId) {
+    public Order createOrder(Long userId, Long addressId, String discountCode, String notes) {
         Cart cart = cartService.getCartByUserId(userId);
         if (cart.getItems().isEmpty()) {
             throw new IllegalStateException("购物车为空，无法创建订单");
@@ -47,12 +47,13 @@ public class OrderService {
 
         // BUG #7 (HIGH): Payment and order not in same transaction boundary
         // The payment is created AFTER the order is committed, so if payment
-        // fails, the order stays in NEW status with no payment record.
+        // fails, the order stays in PENDING status with no payment record.
 
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString().substring(0, 10));
         order.setUser(new User()); // Simplified: should fetch real user
-        order.setStatus(OrderStatus.NEW);
+        order.setStatus(OrderStatus.PENDING);
+        order.setNotes(notes);
         order.setCreatedAt(LocalDateTime.now());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -60,9 +61,9 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
-            orderItem.setProductName(cartItem.getProduct().getName());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setUnitPrice(cartItem.getUnitPrice());
+            orderItem.setSubtotal(cartItem.getUnitPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             orderItems.add(orderItem);
         }
         order.setItems(orderItems);
@@ -71,7 +72,7 @@ public class OrderService {
         // All admin endpoints are publicly accessible - no @PreAuthorize
 
         // BUG #5 (HIGH): calculateOrderTotals includes cancelled items
-        calculateOrderTotals(order);
+        calculateOrderTotals(order, discountCode);
         boolean stockDeducted = inventoryService.deductStock(order.getItems());
         if (!stockDeducted) {
             throw new IllegalStateException("库存不足");
@@ -79,7 +80,7 @@ public class OrderService {
 
         // BUG #7 (MEDIUM): Order committed, then payment created (non-transactional)
         Order savedOrder = orderRepository.save(order);
-        paymentService.processPayment(savedOrder);
+        paymentService.processPayment(savedOrder, Payment.PaymentMethod.CREDIT_CARD, null);
 
         cartService.clearCart(userId);
         notificationService.sendOrderConfirmation(savedOrder);
@@ -93,8 +94,8 @@ public class OrderService {
         return orderRepository.findById(orderId).orElse(null);
     }
 
-    public List<Order> getOrdersByUserId(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public Page<Order> getUserOrders(Long userId, int page, int size) {
+        return orderRepository.findByUserId(userId, PageRequest.of(page, size));
     }
 
     @Transactional
@@ -123,7 +124,7 @@ public class OrderService {
      * If an order item has been cancelled but not removed from the list,
      * its price is still included in the total, leading to overcharging.
      */
-    private void calculateOrderTotals(Order order) {
+    private void calculateOrderTotals(Order order, String discountCode) {
         BigDecimal subtotal = BigDecimal.ZERO;
         for (OrderItem item : order.getItems()) {
             // BUG: Doesn't check item.getStatus() for CANCELLED
@@ -134,7 +135,10 @@ public class OrderService {
         }
         order.setSubtotal(subtotal);
 
-        BigDecimal discount = discountService.calculateDiscount(order);
+        BigDecimal discount = BigDecimal.ZERO;
+        if (discountCode != null && !discountCode.isBlank()) {
+            discount = discountService.applyDiscount(discountCode, subtotal);
+        }
         order.setDiscountAmount(discount);
 
         BigDecimal afterDiscount = subtotal.subtract(discount);
@@ -142,7 +146,7 @@ public class OrderService {
         order.setTaxAmount(tax);
 
         BigDecimal shipping = shippingService.calculateShippingFee(order);
-        order.setShippingAmount(shipping);
+        order.setShippingFee(shipping);
 
         BigDecimal total = afterDiscount.add(tax).add(shipping);
         order.setTotalAmount(total);
@@ -155,7 +159,7 @@ public class OrderService {
         dto.setStatus(order.getStatus().name());
         dto.setSubtotal(order.getSubtotal());
         dto.setTaxAmount(order.getTaxAmount());
-        dto.setShippingAmount(order.getShippingAmount());
+        dto.setShippingFee(order.getShippingFee());
         dto.setDiscountAmount(order.getDiscountAmount());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setCreatedAt(order.getCreatedAt());
@@ -164,9 +168,11 @@ public class OrderService {
             OrderItemDTO itemDTO = new OrderItemDTO();
             itemDTO.setId(item.getId());
             itemDTO.setProductId(item.getProduct().getId());
-            itemDTO.setProductName(item.getProductName());
+            itemDTO.setProductName(item.getProduct().getName());
             itemDTO.setQuantity(item.getQuantity());
             itemDTO.setUnitPrice(item.getUnitPrice());
+            itemDTO.setSubtotal(item.getSubtotal());
+            itemDTO.setStatus(item.getStatus() != null ? item.getStatus().name() : null);
             return itemDTO;
         }).toList());
 

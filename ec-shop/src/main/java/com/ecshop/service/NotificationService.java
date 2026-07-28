@@ -8,25 +8,23 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class NotificationService {
 
-    // COMPILE ERROR #3: getEmailAddress() does not exist on User.
-    // User has an "email" field (Lombok generates getEmail()), but getEmailAddress() is a typo.
     public void sendOrderConfirmation(Order order) {
         log.info("Sending order confirmation email to {} for order {}",
-                order.getUser().getEmailAddress(), order.getOrderNumber());
+                order.getUser().getEmail(), order.getOrderNumber());
     }
 
     public void sendOrderShippedNotification(Order order) {
         log.info("Sending shipping notification to {} for order {}",
-                order.getUser().getEmailAddress(), order.getOrderNumber());
+                order.getUser().getEmail(), order.getOrderNumber());
     }
 
     public void sendOrderCancelledNotification(Order order) {
         log.info("Sending cancellation notification to {} for order {}",
-                order.getUser().getEmailAddress(), order.getOrderNumber());
+                order.getUser().getEmail(), order.getOrderNumber());
     }
 
     public void sendPaymentFailedNotification(Order order) {
         log.info("Sending payment failed notification to {} for order {}",
-                order.getUser().getEmailAddress(), order.getOrderNumber());
+                order.getUser().getEmail(), order.getOrderNumber());
     }
 }

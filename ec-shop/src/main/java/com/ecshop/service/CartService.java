@@ -11,8 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// COMPILE ERROR #4: Missing import for BigDecimal - used extensively in toDTO()
-// import java.math.BigDecimal;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor

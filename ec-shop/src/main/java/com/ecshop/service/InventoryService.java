@@ -53,15 +53,11 @@ public class InventoryService {
                 quantity, productId, inventory.getAvailableQuantity());
     }
 
-    // COMPILE ERROR #2: Return type is String but method body returns Inventory
-    public String getInventory(Long productId) {
+    public Inventory getInventory(Long productId) {
         return inventoryRepository.findByProductId(productId)
                 .orElseThrow(() -> new BusinessException("Inventory not found for product: " + productId));
     }
 
-    // COMPILE ERROR #2b: updateInventory calls getInventory which now returns String,
-    // so assigning String to Inventory and calling inventory.setAvailableQuantity()
-    // will both fail (String doesn't have those methods).
     @Transactional
     public Inventory updateInventory(Long productId, Integer quantity, Integer reorderThreshold) {
         Inventory inventory = getInventory(productId);

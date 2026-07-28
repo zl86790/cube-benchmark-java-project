@@ -27,8 +27,7 @@ public class ProductController {
         // BUG #8 (MEDIUM): Pagination off-by-one in ProductService.getProducts()
         // The service uses 'page' directly as zero-based index, but users expect
         // page=1 to be the first page. So page=1 returns the second page.
-        // COMPILE ERROR #5: getProducts requires 2 arguments (page, size), only 1 passed
-        Page<Product> productPage = productService.getProducts(page);
+        Page<Product> productPage = productService.getProducts(page, size);
         List<ProductDTO> dtos = productService.toDTOList(productPage.getContent());
         return ApiResponse.success(dtos);
     }
