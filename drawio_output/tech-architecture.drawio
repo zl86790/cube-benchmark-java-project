@@ -1,0 +1,298 @@
+<mxfile>
+  <diagram name="Tech Architecture - EC Shop" id="architecture">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connectable="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="client" value="Browser / Mobile App / API Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1733" y="24" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="controllers" value="REST Controllers
+(Product, Order, Cart, User, Payment,
+Coupon, Inventory, +21 more)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="900" y="174" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="security_filter" value="Spring Security Filter Chain
+(authN, authZ, session mgmt)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2080" y="324" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cors" value="CORS Configuration
+(WebConfig)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1445" y="24" width="248" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="product_svc" value="ProductService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="order_svc" value="OrderService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cart_svc" value="CartService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="payment_svc" value="PaymentService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="coupon_svc" value="CouponService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="960" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="inventory_svc" value="InventoryService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="773" y="324" width="147" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="shipping_svc" value="ShippingService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="593" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tax_svc" value="TaxService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="413" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="discount_svc" value="DiscountService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="233" y="324" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="notification_svc" value="NotificationService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="24" y="324" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cache" value="Spring Cache
+(ConcurrentMapCacheManager)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="474" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="repos" value="Spring Data JPA Repositories
+(36 repositories)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="930" y="474" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" value="H2 In-Memory Database
+(jdbc:h2:mem:ecshop)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="930" y="624" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mock_payment" value="Mock Payment Gateway
+(simulatePaymentGateway)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="474" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exception_handler" value="GlobalExceptionHandler
+(@RestControllerAdvice)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="24" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="validation" value="Bean Validation
+(jakarta.validation)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="845" y="24" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="logging" value="Logging
+(Slf4j / @Slf4j)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1998" y="174" width="205" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dto" value="DTO / ApiResponse
+(43 DTOs + ApiResponse)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="545" y="24" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e0" value="HTTP /api/**" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.167;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="client" target="controllers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1863" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="intercepted by" style="html=1;rounded=1;dashed=1;exitX=0.083;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="security_filter">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1916" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" value="CORS headers" style="html=1;rounded=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.333;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cors" target="controllers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1569" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" style="html=1;rounded=1;exitX=0.167;exitY=1;exitDx=0;exitDy=0;entryX=0.333;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="product_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1676" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" style="html=1;rounded=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="order_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1570" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" style="html=1;rounded=1;exitX=0.333;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="cart_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1390" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" style="html=1;rounded=1;exitX=0.417;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="payment_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="coupon_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="html=1;rounded=1;exitX=0.583;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="inventory_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="847" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" style="html=1;rounded=1;exitX=0.667;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="shipping_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="663" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" style="html=1;rounded=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="tax_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="483" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" style="html=1;rounded=1;exitX=0.833;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="discount_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="303" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" style="html=1;rounded=1;exitX=0.917;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="controllers" target="notification_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="109" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="cache lookup" style="html=1;rounded=1;exitX=0.333;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="product_svc" target="cache">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1980" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" style="html=1;rounded=1;exitX=0.667;exitY=1;exitDx=0;exitDy=0;entryX=0.091;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="product_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1670" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.182;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1570" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.273;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cart_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1390" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" style="html=1;rounded=1;exitX=0.333;exitY=1;exitDx=0;exitDy=0;entryX=0.364;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="payment_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1290" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.455;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="coupon_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.545;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="inventory_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="847" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.636;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="shipping_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="663" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.727;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="tax_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="483" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.818;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="discount_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="303" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.909;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="notification_svc" target="repos">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="109" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" value="JDBC" style="html=1;rounded=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="repos" target="h2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="579" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" value="simulates" style="html=1;rounded=1;dashed=1;exitX=0.667;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="payment_svc" target="mock_payment">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1130" y="429" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" value="handles exceptions" style="html=1;rounded=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="exception_handler" target="controllers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1275" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e27" value="validates DTOs" style="html=1;rounded=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.667;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="validation" target="controllers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e28" value="wraps request/response" style="html=1;rounded=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.833;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dto" target="controllers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="675" y="129" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e29" value="@Slf4j logging" style="html=1;rounded=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.667;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="logging" target="product_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2100" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

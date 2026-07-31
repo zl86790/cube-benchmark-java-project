@@ -1,0 +1,442 @@
+<mxfile>
+  <diagram name="EC-Shop 业务架构图" id="architecture">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connectable="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="product_mgmt" value="商品管理
+(ProductService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="2024" y="1114" width="183" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="category_mgmt" value="分类管理
+(CategoryService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="35" y="174" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="brand_mgmt" value="品牌管理
+(BrandService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="46" y="274" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tag_mgmt" value="标签管理
+(TagService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="53" y="374" width="154" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="search" value="商品搜索
+(SearchService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1721" y="714" width="176" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="order_mgmt" value="订单管理
+(OrderService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="894" y="844" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cart_mgmt" value="购物车
+(CartService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1732" y="984" width="154" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="payment_mgmt" value="支付处理
+(PaymentService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="2024" y="664" width="183" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="discount_mgmt" value="折扣计算
+(DiscountService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1168" y="864" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tax_mgmt" value="税费计算
+(TaxService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1186" y="764" width="154" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="shipping_fee" value="运费计算
+(ShippingService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1168" y="664" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="coupon_mgmt" value="优惠券
+(CouponService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="625" y="1044" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="user_mgmt" value="用户管理
+(UserService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="49" y="474" width="162" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="address_mgmt" value="地址管理
+(UserAddressService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="24" y="574" width="212" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="loyalty_mgmt" value="积分/忠诚度
+(LoyaltyService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="31" y="674" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="membership_mgmt" value="会员等级
+(MembershipService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="28" y="774" width="205" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wishlist_mgmt" value="收藏/心愿单
+(WishlistService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1707" y="614" width="205" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="promotion_mgmt" value="促销活动
+(PromotionService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="326" y="1084" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="giftcard_mgmt" value="礼品卡
+(GiftCardService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="39" y="874" width="183" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="inventory_mgmt" value="库存管理
+(InventoryService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="2016" y="534" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="warehouse_mgmt" value="仓库管理
+(WarehouseService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="2016" y="144" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="supplier_mgmt" value="供应商管理
+(SupplierService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="2016" y="874" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="purchase_order_mgmt" value="采购单管理
+(PurchaseOrderService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1692" y="324" width="234" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="shipment_mgmt" value="发货管理
+(ShipmentService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="614" y="24" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="review_mgmt" value="商品评价
+(ReviewService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1721" y="224" width="176" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qa_mgmt" value="商品问答
+(ProductQAService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="424" width="198" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="notification_mgmt" value="消息通知
+(NotificationService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1153" y="564" width="219" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="report_mgmt" value="报表统计
+(ReportService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="337" y="974" width="176" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_mgmt" value="审计日志
+(AuditService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="341" y="424" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="return_mgmt" value="退货退款
+(ReturnService)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1721" y="124" width="176" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="buyer" value="👤 买家" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1462" y="534" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="seller_admin" value="👤 卖家/管理员" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="974" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="payment_gateway" value="🏦 支付网关" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="2304" y="664" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e0" value="获取商品信息" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;" edge="1" parent="1" source="cart_mgmt" target="product_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="1014" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="从购物车创建订单" style="html=1;rounded=1;exitX=1;exitY=0.125;exitDx=0;exitDy=0;entryX=0;entryY=0.333;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="cart_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="1094" />
+              <mxPoint x="1263" y="1094" />
+              <mxPoint x="1417" y="1094" />
+              <mxPoint x="1532" y="1094" />
+              <mxPoint x="1647" y="1094" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" value="扣减库存" style="html=1;rounded=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="inventory_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="1074" />
+              <mxPoint x="1263" y="1074" />
+              <mxPoint x="1417" y="1074" />
+              <mxPoint x="1532" y="1074" />
+              <mxPoint x="1647" y="1074" />
+              <mxPoint x="1809" y="1074" />
+              <mxPoint x="1971" y="1074" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" value="发起支付" style="html=1;rounded=1;exitX=1;exitY=0.375;exitDx=0;exitDy=0;entryX=0;entryY=0.333;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="payment_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="954" />
+              <mxPoint x="1263" y="954" />
+              <mxPoint x="1417" y="954" />
+              <mxPoint x="1532" y="954" />
+              <mxPoint x="1647" y="954" />
+              <mxPoint x="1809" y="954" />
+              <mxPoint x="1971" y="954" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" value="应用折扣码" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="discount_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="894" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" value="计算税费" style="html=1;rounded=1;exitX=1;exitY=0.625;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="tax_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="794" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="计算运费" style="html=1;rounded=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="shipping_fee">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="694" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="发送订单确认通知" style="html=1;rounded=1;dashed=1;exitX=1;exitY=0.875;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="order_mgmt" target="notification_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1108" y="594" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="调用支付网关" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="payment_mgmt" target="payment_gateway">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2259" y="694" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="获取商品" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;" edge="1" parent="1" source="wishlist_mgmt" target="product_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="644" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" value="关联商品" style="html=1;rounded=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;" edge="1" parent="1" source="promotion_mgmt" target="product_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="569" y="1134" />
+              <mxPoint x="709" y="1134" />
+              <mxPoint x="849" y="1134" />
+              <mxPoint x="979" y="1134" />
+              <mxPoint x="1108" y="1134" />
+              <mxPoint x="1263" y="1134" />
+              <mxPoint x="1417" y="1134" />
+              <mxPoint x="1532" y="1134" />
+              <mxPoint x="1647" y="1134" />
+              <mxPoint x="1809" y="1134" />
+              <mxPoint x="1971" y="1134" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="发放优惠券" style="html=1;rounded=1;dashed=1;exitX=1;exitY=0.667;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="promotion_mgmt" target="coupon_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="569" y="1074" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" value="验证已购买" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.167;entryDx=0;entryDy=0;" edge="1" parent="1" source="review_mgmt" target="order_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="254" />
+              <mxPoint x="1532" y="254" />
+              <mxPoint x="1417" y="254" />
+              <mxPoint x="1263" y="254" />
+              <mxPoint x="1108" y="254" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="查询订单" style="html=1;rounded=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.333;entryDx=0;entryDy=0;" edge="1" parent="1" source="return_mgmt" target="order_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="154" />
+              <mxPoint x="1532" y="154" />
+              <mxPoint x="1417" y="154" />
+              <mxPoint x="1263" y="154" />
+              <mxPoint x="1108" y="154" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="发起退款" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.667;entryDx=0;entryDy=0;" edge="1" parent="1" source="return_mgmt" target="payment_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="234" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="恢复库存" style="html=1;rounded=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="return_mgmt" target="inventory_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="104" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" value="关联订单" style="html=1;rounded=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="shipment_mgmt" target="order_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="849" y="344" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" value="仓库出库" style="html=1;rounded=1;exitX=1;exitY=0.667;exitDx=0;exitDy=0;entryX=0;entryY=0.333;entryDx=0;entryDy=0;" edge="1" parent="1" source="shipment_mgmt" target="warehouse_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="849" y="44" />
+              <mxPoint x="979" y="44" />
+              <mxPoint x="1108" y="44" />
+              <mxPoint x="1263" y="44" />
+              <mxPoint x="1417" y="44" />
+              <mxPoint x="1532" y="44" />
+              <mxPoint x="1647" y="44" />
+              <mxPoint x="1809" y="44" />
+              <mxPoint x="1971" y="44" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" value="向供应商采购" style="html=1;rounded=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="purchase_order_mgmt" target="supplier_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="494" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" value="入库到仓库" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.667;entryDx=0;entryDy=0;" edge="1" parent="1" source="purchase_order_mgmt" target="warehouse_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="324" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="增加库存" style="html=1;rounded=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="purchase_order_mgmt" target="inventory_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1971" y="254" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" value="浏览/搜索商品" style="html=1;rounded=1;exitX=1;exitY=0.125;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="search">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="744" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" value="加入购物车" style="html=1;rounded=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.667;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="cart_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="694" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" value="下单" style="html=1;rounded=1;exitX=1;exitY=0.375;exitDx=0;exitDy=0;entryX=0;entryY=0.667;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="order_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1417" y="374" />
+              <mxPoint x="1263" y="374" />
+              <mxPoint x="1108" y="374" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" value="收藏商品" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="wishlist_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="644" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" value="发表评价" style="html=1;rounded=1;exitX=1;exitY=0.625;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="review_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="474" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" value="提问/回答" style="html=1;rounded=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="qa_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="454" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e27" value="申请退货" style="html=1;rounded=1;exitX=1;exitY=0.875;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="buyer" target="return_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1647" y="354" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e28" value="管理商品" style="html=1;rounded=1;exitX=1;exitY=0.167;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;" edge="1" parent="1" source="seller_admin" target="product_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="281" y="1174" />
+              <mxPoint x="425" y="1174" />
+              <mxPoint x="569" y="1174" />
+              <mxPoint x="709" y="1174" />
+              <mxPoint x="849" y="1174" />
+              <mxPoint x="979" y="1174" />
+              <mxPoint x="1108" y="1174" />
+              <mxPoint x="1263" y="1174" />
+              <mxPoint x="1417" y="1174" />
+              <mxPoint x="1532" y="1174" />
+              <mxPoint x="1647" y="1174" />
+              <mxPoint x="1809" y="1174" />
+              <mxPoint x="1971" y="1174" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e29" value="创建促销" style="html=1;rounded=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="seller_admin" target="promotion_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="281" y="1114" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e30" value="查看报表" style="html=1;rounded=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="seller_admin" target="report_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="281" y="1004" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e31" value="审计操作" style="html=1;rounded=1;exitX=1;exitY=0.667;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="seller_admin" target="audit_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="281" y="454" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e32" value="处理发货" style="html=1;rounded=1;exitX=1;exitY=0.833;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="seller_admin" target="shipment_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="281" y="54" />
+              <mxPoint x="425" y="54" />
+              <mxPoint x="569" y="54" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e33" value="核销优惠券" style="html=1;rounded=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.833;entryDx=0;entryDy=0;" edge="1" parent="1" source="coupon_mgmt" target="order_mgmt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="849" y="1074" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e34" value="推送通知" style="html=1;rounded=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="notification_mgmt" target="buyer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1417" y="594" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
